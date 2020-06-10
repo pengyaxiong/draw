@@ -13,4 +13,15 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
 
+    $router->resource('configs', 'ConfigController');
+
+    $router->resource('customers', 'CustomerController');
+
+    Route::group(['prefix' => 'shop', 'namespace' => 'Shop', 'as' => 'shop.'], function (Router $router) {
+
+        $router->resource('categories', 'CategoryController');
+
+        $router->resource('products', 'ProductController');
+
+    });
 });
