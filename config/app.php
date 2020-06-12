@@ -161,6 +161,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         Stevenyangecho\UEditor\UEditorServiceProvider::class,
+        Spatie\Activitylog\ActivitylogServiceProvider::class,
     ],
 
     /*

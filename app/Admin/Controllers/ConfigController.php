@@ -29,8 +29,6 @@ class ConfigController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('rule', __('活动规则'));
         $grid->column('coin', __('签到积分'));
-        $grid->column('wechat_app_id', __('Wechat app id'));
-        $grid->column('wechat_secret', __('Wechat secret'));
 
         //禁用创建按钮
         $grid->disableCreateButton();
@@ -64,8 +62,6 @@ class ConfigController extends AdminController
         $show->field('id', __('Id'));
         $show->field('rule', __('活动规则'));
         $show->field('coin', __('签到积分'));
-        $show->field('wechat_app_id', __('Wechat app id'));
-        $show->field('wechat_secret', __('Wechat secret'));
 
         return $show;
     }
@@ -84,9 +80,6 @@ class ConfigController extends AdminController
         });
 
         $form->number('coin', __('签到积分'));
-
-        $form->text('wechat_app_id', __('Wechat app id'));
-        $form->text('wechat_secret', __('Wechat secret'));
 
         return $form;
     }

@@ -23,5 +23,10 @@ Route::group([
 
         $router->resource('products', 'ProductController');
 
+        $router->resource('orders', 'OrderController');
+
+        $router->resource('addresses', 'AddressController');
+
+        $router->resource('coins', 'CoinController');
     });
 });

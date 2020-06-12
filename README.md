@@ -21,5 +21,8 @@
 - 在config/cors.php配置文件中，修改paths配置如下：'paths'  => ['api/*'],
 - 在app/Http/Kernel.php文件 protected $middleware 位置加入\Fruitcake\Cors\HandleCors::class,
 
-### composer require laravel-admin-ext/latlong -vvv
+### composer require spatie/laravel-activitylog 1.3.1
+- php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="migrations"
+- php artisan migrate 
+- php artisan vendor:publish --provider="Spatie\Activitylog\ActivitylogServiceProvider" --tag="config"
 

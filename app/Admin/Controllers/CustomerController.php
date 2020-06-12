@@ -27,7 +27,6 @@ class CustomerController extends AdminController
         $grid = new Grid(new Customer());
 
         $grid->column('id', __('Id'));
-        $grid->column('name', __('Name'))->editable();
         $grid->column('openid', __('Openid'))->copyable();
         $grid->column('nickname', __('Nickname'))->copyable();
         $grid->column('headimgurl', __('Headimgurl'))->image();
@@ -42,6 +41,7 @@ class CustomerController extends AdminController
         ], 'warning');
         $grid->column('language', __('Language'))->hide();
         $grid->column('tel', __('Tel'))->editable();
+        $grid->column('coin', __('积分'));
         $grid->column('country', __('Country'))->hide();
         $grid->column('province', __('Province'))->hide();
         $grid->column('city', __('City'))->hide();
@@ -86,7 +86,6 @@ class CustomerController extends AdminController
         $show = new Show(Customer::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('name', __('Name'));
         $show->field('openid', __('Openid'));
         $show->field('sex', __('Sex'));
         $show->field('language', __('Language'));
@@ -114,7 +113,6 @@ class CustomerController extends AdminController
     {
         $form = new Form(new Customer());
 
-        $form->text('name', __('Name'));
         $form->text('openid', __('Openid'));
         $form->select('sex', __('Sex'))->options([1=>'男',2=>'女',0=>'保密']);
         $form->text('language', __('Language'));

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Shop\Address;
+use App\Models\Shop\Order;
 use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
@@ -11,5 +13,14 @@ class Customer extends Model
     protected $table = 'mini_customer';
 
 
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 
 }

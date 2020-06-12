@@ -45,7 +45,8 @@ class ProductController extends AdminController
         ];
         $grid->column('is_prize', __('是否是奖品'))->switch($states);
 
-        $grid->column('rate', __('中奖率'))->editable();
+        $grid->column('rate_o', __('10积分中奖率'))->sortable()->editable()->help('为正整数，数值越大中奖概率越高');
+        $grid->column('rate_f', __('50积分中奖率'))->sortable()->editable()->help('为正整数，数值越大中奖概率越高');
         $grid->column('sort_order', __('Sort order'))->sortable()->editable()->help('按数字大小正序排序');
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
@@ -57,6 +58,12 @@ class ProductController extends AdminController
             $select_array = array_column($categories, 'name', 'id');
 
             $filter->equal('category_id', __('所属分类'))->select($select_array);
+
+            $status_text = [
+                1 => '是',
+                0 => '不是'
+            ];
+            $filter->equal('is_prize', __('是否是奖品'))->select($status_text);
         });
 
         return $grid;
@@ -84,7 +91,8 @@ class ProductController extends AdminController
         $show->field('price', __('Price'));
         $show->field('old_price', __('Old price'));
         $show->field('is_prize', __('Is prize'));
-        $show->field('rate', __('Rate'));
+        $show->field('rate_o', __('10积分中奖率'));
+        $show->field('rate_f', __('50积分中奖率'));
         $show->field('sort_order', __('Sort order'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
@@ -108,7 +116,7 @@ class ProductController extends AdminController
         //创建select
         $form->select('category_id', __('所属分类'))->options($select_array);
 
-        $form->text('sale_num', __('销量'));
+        $form->number('sale_num', __('销量'));
         $form->text('discuss', __('好评'));
 
         $form->image('image', __('Image'))->rules('required|image');
@@ -126,7 +134,8 @@ class ProductController extends AdminController
             'off' => ['value' => 0, 'text' => '否', 'color' => 'danger'],
         ];
         $form->switch('is_prize', __('是否是奖品'))->states($states)->default(1);
-        $form->decimal('rate', __('中奖率'))->default(1.00);
+        $form->number('rate_o', __('10积分中奖率'))->help('为正整数，数值越大中奖概率越高');
+        $form->number('rate_f', __('50积分中奖率'))->help('为正整数，数值越大中奖概率越高');
         $form->number('sort_order', __('Sort order'))->default(99);
 
         return $form;
