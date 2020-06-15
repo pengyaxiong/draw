@@ -70,6 +70,7 @@ return [
     '#3' => ['message' => '今天你已经领取过积分了', 'status_code' => 400],
     '#4' => ['message' => '积分不足', 'status_code' => 400],
     '#5' => ['message' => '谢谢参与', 'status_code' => 400],
+    '#6' => ['message' => '请完善收货地址', 'status_code' => 400],
 
     '#1001' => ['message' => '手机号格式不正确', 'status_code' => 400],
     '#1002' => ['message' => '手机号不存在或密码错误', 'status_code' => 400],

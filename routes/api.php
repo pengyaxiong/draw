@@ -45,6 +45,8 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
     Route::get('edit_address/{id}', 'IndexController@edit_address');
     //更新地址
     Route::post('update_address', 'IndexController@update_address');
+    //删除地址
+    Route::post('delete_address', 'IndexController@delete_address');
     //设为默认地址
     Route::post('default_address', 'IndexController@default_address');
     //我的积分记录
@@ -61,6 +63,7 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
     Route::get('order', 'IndexController@order');
     //完成订单
     Route::post('finish', 'IndexController@finish');
-
+    //修改订单
+    Route::post('order_address', 'IndexController@order_address');
 
 });

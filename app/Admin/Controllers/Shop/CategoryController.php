@@ -2,14 +2,30 @@
 
 namespace App\Admin\Controllers\Shop;
 
+use App\Handlers\PinyinHandler;
 use App\Models\Shop\Category;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Widgets\Table;
+
 class CategoryController extends AdminController
 {
+
+    private $Pinyin;
+
+    /**
+     * CategoryController constructor.
+     * @param PinyinHandler $Pinyin
+     * $pinyin->getFirstChar("湖北武汉")       H;
+      $pinyin->getPinyin("北上广")             bei shang guang;
+     */
+    public function __construct(PinyinHandler $Pinyin)
+    {
+        $this->Pinyin = $Pinyin;
+    }
+
     /**
      * Title for current resource.
      *
@@ -33,25 +49,25 @@ class CategoryController extends AdminController
         $grid->column('image', __('Image'))->image();
         $grid->column('parent_id', '下级')->display(function () {
             return '下级';
-        })->modal('下级',function ($model) {
+        })->modal('下级', function ($model) {
 
             $children = $model->children->map(function ($child) {
-                return $child->only(['id','name']);
+                return $child->only(['id', 'name']);
             });
 
-            $array=$children->toArray();
-            foreach ($array as $k=>$v){
-                $url=route('admin.shop.categories.edit',$v['id']);
-                $array[$k]['edit']='<div class="btn">
-              <a class="btn btn-sm btn-default pull-right" target="_blank" href="'.$url.'" rel="external" >
+            $array = $children->toArray();
+            foreach ($array as $k => $v) {
+                $url = route('admin.shop.categories.edit', $v['id']);
+                $array[$k]['edit'] = '<div class="btn">
+              <a class="btn btn-sm btn-default pull-right" target="_blank" href="' . $url . '" rel="external" >
               <i class="fa fa-edit"></i> 编辑</a>
                  </div>';
             }
 
-            return new Table(['ID', __('名称'),'操作'], $array);
+            return new Table(['ID', __('名称'), '操作'], $array);
         });
         $states = [
-            'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
+            'on' => ['value' => 1, 'text' => '是', 'color' => 'success'],
             'off' => ['value' => 0, 'text' => '否', 'color' => 'danger'],
         ];
         $grid->column('is_show', '是否显示')->switch($states);
@@ -107,7 +123,7 @@ class CategoryController extends AdminController
 
         $form->text('name', __('Name'))->rules('required');
 
-        $parents = Category::where('parent_id',false)->get()->toArray();
+        $parents = Category::where('parent_id', false)->get()->toArray();
         $select_ = array_prepend($parents, ['id' => 0, 'name' => '顶级']);
         $select_array = array_column($select_, 'name', 'id');
 
@@ -124,6 +140,15 @@ class CategoryController extends AdminController
         $form->switch('is_show', __('Is show'))->states($states)->default(1);
 
         $form->number('sort_order', __('Sort order'))->default(99);
+
+
+        //保存后回调
+        $form->saved(function (Form $form) {
+            $name = $form->model()->name;
+            $model = $form->model();
+            $model->pinyin=$this->Pinyin->getFirstChar($name);
+            $model->save();
+        });
 
         return $form;
     }

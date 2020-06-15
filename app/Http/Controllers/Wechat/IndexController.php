@@ -153,7 +153,7 @@ class IndexController extends Controller
     {
         $categories = Category::with(['children' => function ($query) {
             $query->orderby('sort_order')->get();
-        }])->where('is_show', true)->where('parent_id', 0)->orderby('sort_order')->get();
+        }])->where('is_show', true)->where('parent_id', 0)->orderby('pinyin')->get()->groupby('pinyin');
 
         return $this->array(['categories' => $categories]);
     }
@@ -199,11 +199,32 @@ class IndexController extends Controller
 
     public function search(Request $request)
     {
-        $keyword = '%' . $request->keyword . '%';
-        $products = Product::where('name', 'like', $keyword)->where('id','>',0)->paginate($request->total);
+        $where = function ($query) use ($request) {
+            $keyword = '%' . $request->keyword . '%';
+            $query->where('name', 'like', $keyword);
+
+            if ($request->has('sale_num') and $request->sale_num != '') {
+
+                $query->orderby('sale_num', 'desc');
+            }
+            if ($request->has('price_desc') and $request->price_desc != '') {
+
+                $query->orderby('price_desc', 'desc');
+            }
+            if ($request->has('price_asc') and $request->price_asc != '') {
+
+                $query->orderby('price_asc', 'asc');
+            }
+
+        };
+        $products = Product::where($where)->where('id','>',0)->paginate($request->total);
         $page = isset($page) ? $request['page'] : 1;
         $products = $products->appends(array(
             'page' => $page,
+            'keyword' => $request->keyword,
+            'sale_num' => $request->sale_num,
+            'price_desc' => $request->price_desc,
+            'price_asc' => $request->price_asc,
         ));
 
         return $this->array(['list' => $products]);
@@ -258,9 +279,22 @@ class IndexController extends Controller
 
                 $this->error(500, $error);
             }
+            $num=Address::where('customer_id', $customer->id)->where('is_default',1)->count();
+            $is_default=$request->is_default;
+            if($num==0){
+                $is_default=1;
+            }else{
+
+                if($is_default==1){
+                    Address::where('customer_id', $customer->id)->update(['is_default' => 0]);
+                }
+            }
+
+
             $pca = explode(",", $request->pca);
             Address::create([
                 'customer_id' => $customer->id,
+                'is_default' => $is_default,
                 'name' => $request->name,
                 'province' => $pca[0],
                 'city' => $pca[1],
@@ -301,7 +335,10 @@ class IndexController extends Controller
         $customer = Customer::where('openid', $openid)->first();
 
         $pca = explode(",", $request->pca);
-
+        $is_default=$request->is_default;
+        if($is_default==1){
+            Address::where('customer_id', $customer->id)->update(['is_default' => 0]);
+        }
         Address::where('id', $id)->update([
             'name' => $request->name,
             'province' => $pca[0],
@@ -309,6 +346,7 @@ class IndexController extends Controller
             'area' => $pca[2],
             'tel' => $request->tel,
             'detail' => $request->detail,
+            'is_default' => $is_default,
         ]);
 
         return $this->null();
@@ -329,6 +367,21 @@ class IndexController extends Controller
 
         return $this->null();
     }
+
+    public function delete_address(Request $request)
+    {
+        $openid = $request->openid;
+        $address_id = $request->address_id;
+        if (!$openid) {
+            return $this->error(2);
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        Address::where('customer_id', $customer->id)->where('id', $address_id)->delete();
+
+        return $this->null();
+    }
+
 
     public function coin(Request $request)
     {
@@ -465,18 +518,22 @@ class IndexController extends Controller
 
             $order_sn = date('YmdHms', time()) . $customer->id. $result;
             $address=Address::where('customer_id',$customer->id)->where('is_default',true)->first();
+
             Order::create([
                 'customer_id' => $customer->id,
                 'order_sn' => $order_sn,
                 'product_id' => $result,
                 'total_price' => $product->price,
                 'status' => 2,
-                'name' => $address->name,
-                'tel' => $address->tel,
+                'name' => $address?$address->name:'',
+                'tel' => $address?$address->tel:'',
                 'pay_time' => date('Y-m-d H:i:s',time()),
-                'address' => $address->province.''.$address->city.''.$address->area.''.$address->detail,
+                'address' => $address?$address->province.''.$address->city.''.$address->area.''.$address->detail:'',
             ]);
 
+            if(!$address){
+                return $this->error(6);
+            }
             activity()->inLog('draw')
                 ->performedOn($product)
                 ->causedBy($customer)
@@ -545,6 +602,31 @@ class IndexController extends Controller
             $order->status = 4;
             $order->save();
         }
+
+        return $this->null();
+    }
+
+    public function order_address(Request $request)
+    {
+        $openid = $request->openid;
+        $order_id = $request->order_id;
+
+        $name = $request->name;
+        $tel = $request->tel;
+        $address = $request->pca.$request->detail;
+
+        if (!$openid) {
+            return $this->error(2);
+        }
+
+        $customer = Customer::where('openid', $openid)->first();
+
+        $order = Order::where('customer_id', $customer->id)->find($order_id);
+
+        $order->name = $name;
+        $order->tel = $tel;
+        $order->address = $address;
+        $order->save();
 
         return $this->null();
     }
