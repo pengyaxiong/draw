@@ -29,6 +29,7 @@ class ConfigController extends AdminController
         $grid->column('id', __('Id'));
         $grid->column('rule', __('活动规则'));
         $grid->column('coin', __('签到积分'));
+        $grid->column('coin_draw', __('抽奖积分'));
 
         //禁用创建按钮
         $grid->disableCreateButton();
@@ -62,6 +63,7 @@ class ConfigController extends AdminController
         $show->field('id', __('Id'));
         $show->field('rule', __('活动规则'));
         $show->field('coin', __('签到积分'));
+        $show->field('coin_draw', __('抽奖积分'));
 
         return $show;
     }
@@ -80,6 +82,7 @@ class ConfigController extends AdminController
         });
 
         $form->number('coin', __('签到积分'));
+        $form->number('coin_draw', __('抽奖积分'));
 
         return $form;
     }
