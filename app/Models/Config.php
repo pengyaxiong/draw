@@ -21,4 +21,14 @@ class Config extends Model
     {
         $this->attributes['rule'] = json_encode(array_values($rule));
     }
+
+    public function getCoinSearchAttribute($search)
+    {
+        return array_values(json_decode($search, true) ?: []);
+    }
+
+    public function setCoinSearchAttribute($search)
+    {
+        $this->attributes['coin_search'] = json_encode(array_values($search));
+    }
 }

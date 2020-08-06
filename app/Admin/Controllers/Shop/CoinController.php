@@ -16,7 +16,7 @@ class CoinController extends AdminController
      *
      * @var string
      */
-    protected $title = '积分管理';
+    protected $title = '财务管理';
 
     /**
      * Make a grid builder.
@@ -34,7 +34,11 @@ class CoinController extends AdminController
         $grid->column('subject_type', __('Subject type'));
         $grid->column('causer_id', __('Causer id'));
         $grid->column('causer_type', __('Causer type'));
-        $grid->column('properties', __('Properties'));
+        $grid->column('properties', __('Properties'))->display(function ($properties) {
+            $type=isset($properties['type'])?$properties['type']:'';
+            $num=isset($properties['num'])?$properties['num']:'';
+            return $type . ' ' . $num;
+        });
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
 
@@ -52,9 +56,9 @@ class CoinController extends AdminController
         //禁用创建按钮
         $grid->disableCreateButton();
         $grid->actions(function ($actions) {
-           // $actions->disableView();
-            // $actions->disableEdit();
-            //$actions->disableDelete();
+            $actions->disableView();
+             $actions->disableEdit();
+            $actions->disableDelete();
         });
         return $grid;
     }

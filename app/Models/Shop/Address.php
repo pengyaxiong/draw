@@ -11,9 +11,8 @@ class Address extends Model
     protected $guarded = [];
     protected $table = 'mini_shop_addresses';
 
-    public function customer()
+    public function orders()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->hasMany(Order::class);
     }
-
 }

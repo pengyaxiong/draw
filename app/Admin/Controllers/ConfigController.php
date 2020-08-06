@@ -27,9 +27,17 @@ class ConfigController extends AdminController
         $grid = new Grid(new Config());
 
         $grid->column('id', __('Id'));
-        $grid->column('rule', __('活动规则'));
+        $grid->column('rule', __('活动规则'))->display(function ($model){
+            return implode('<br>',array_pluck($model,'description'));
+        });
         $grid->column('coin', __('签到积分'));
-        $grid->column('coin_draw', __('抽奖积分'));
+        $grid->column('draw_coin', __('抽奖积分'));
+        $grid->column('commission_rate', __('佣金比列'));
+        $grid->column('goods_rate', __('商品反积分比列'));
+        $grid->column('coin_search', __('积分筛选区间'))->display(function ($model){
+            return implode('<br>',array_pluck($model,'description'));
+        });
+        $grid->column('withdraw_info', __('提现说明'))->width(200);
 
         //禁用创建按钮
         $grid->disableCreateButton();
@@ -63,7 +71,11 @@ class ConfigController extends AdminController
         $show->field('id', __('Id'));
         $show->field('rule', __('活动规则'));
         $show->field('coin', __('签到积分'));
-        $show->field('coin_draw', __('抽奖积分'));
+        $show->field('draw_coin', __('抽奖积分'));
+        $show->field('commission_rate', __('佣金比列'));
+        $show->field('goods_rate', __('商品反积分比列'));
+        $show->field('coin_search', __('积分筛选区间'));
+        $show->field('withdraw_info', __('提现说明'));
 
         return $show;
     }
@@ -82,7 +94,15 @@ class ConfigController extends AdminController
         });
 
         $form->number('coin', __('签到积分'));
-        $form->number('coin_draw', __('抽奖积分'));
+        $form->number('draw_coin', __('抽奖积分'));
+
+        $form->text('commission_rate', __('佣金比列'));
+        $form->text('goods_rate', __('商品反积分比列'));
+
+        $form->table('coin_search', __('积分筛选区间'), function ($table) {
+            $table->text('description', __('Description'))->help('以-连接');
+        });
+        $form->ueditor('withdraw_info', __('提现说明'));
 
         return $form;
     }

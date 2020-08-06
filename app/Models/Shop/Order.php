@@ -16,8 +16,19 @@ class Order extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function product()
+    public function address()
     {
-        return $this->belongsTo(Product::class);
+        return $this->hasOne(OrderAddress::class);
     }
+
+    public function order_products()
+    {
+        return $this->hasMany(OrderProduct::class);
+    }
+
+    public function order_comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
 }

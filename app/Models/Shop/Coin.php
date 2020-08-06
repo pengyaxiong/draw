@@ -18,12 +18,7 @@ class Coin extends Model
 
     public function getPropertiesAttribute($properties)
     {
-        return array_values(json_decode($properties, true) ?: []);
-    }
-
-    public function setPropertiesAttribute($properties)
-    {
-        $this->attributes['properties'] = json_encode(array_values($properties));
+        return json_decode($properties, true);
     }
 
 }

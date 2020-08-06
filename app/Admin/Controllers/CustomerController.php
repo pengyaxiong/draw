@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Table;
 
 class CustomerController extends AdminController
 {
@@ -25,11 +26,34 @@ class CustomerController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Customer());
+        //$grid->model()->where('parent_id', '0');
+        $grid->model()->orderBy('sort_order', 'asc');
 
         $grid->column('id', __('Id'));
         $grid->column('openid', __('Openid'))->copyable();
         $grid->column('nickname', __('Nickname'))->copyable();
         $grid->column('headimgurl', __('Headimgurl'))->image();
+
+        $grid->column('children', __('我的下级'))->display(function () {
+            return '点击查看';
+        })->expand(function ($model) {
+            $children = $model->children->map(function ($child) {
+                return $child->only(['id', 'nickname', 'tel','remark']);
+            });
+            $array = $children->toArray();
+            return new Table(['ID', __('Nickname'), __('Tel'), __('Remark')], $array);
+        });
+
+        $grid->column('address', __('收货地址'))->display(function () {
+            return '点击查看';
+        })->expand(function ($model) {
+            $addresses = $model->addresses->map(function ($child) {
+                return $child->only(['id', 'province', 'city','area','detail','name','tel']);
+            });
+            $array = $addresses->toArray();
+            return new Table(['ID', __('Province'), __('City'), __('Area'), __('Detail'), __('Name'), __('Tel')], $array);
+        });
+
         $grid->column('sex', __('Sex'))->using([
             1 => '男',
             2 => '女',

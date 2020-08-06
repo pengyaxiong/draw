@@ -25,4 +25,13 @@ class Product extends Model
         $this->attributes['images'] = json_encode(array_values($images));
     }
 
+    public function getSkuAttribute($sku)
+    {
+        return array_values(json_decode($sku, true) ?: []);
+    }
+
+    public function setSkuAttribute($sku)
+    {
+        $this->attributes['sku'] = json_encode(array_values($sku));
+    }
 }

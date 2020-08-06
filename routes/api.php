@@ -17,6 +17,21 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['namespace' => 'Api'], function () {
+
+    //订单状态统计
+    Route::get('order_status', 'VisualizationController@order_status');
+    //本月热门销量
+    Route::get('order_count', 'VisualizationController@order_count');
+    //本周销售额
+    Route::get('sales_amount', 'VisualizationController@sales_amount');
+    //本周订单数
+    Route::get('sales_count', 'VisualizationController@sales_count');
+    //会员注册量
+    Route::get('statistics_customer', 'VisualizationController@statistics_customer');
+
+});
+
 Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'], function () {
 
     //授权
@@ -37,6 +52,54 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
 
     //用户信息
     Route::get('customer', 'IndexController@customer');
+
+    /**
+     * 二期
+     */
+    //上传图片
+    Route::post('upload_img', 'IndexController@upload_img');
+
+    //我的团队
+    Route::get('group', 'IndexController@group');
+    //提现
+    Route::post('do_withdraw', 'IndexController@do_withdraw');
+    //佣金明细
+    Route::get('money', 'IndexController@money');
+    //邀请用户
+    Route::get('code', 'IndexController@code');
+
+    //添加到购物车
+    Route::post('add_cart', 'IndexController@add_cart');
+    //购物车列表
+    Route::get('cart', 'IndexController@cart');
+    //删除选中
+    Route::post('destroy_checked', 'IndexController@destroy_checked');
+    //修改购物车商品数量
+    Route::post('change_num', 'IndexController@change_num');
+
+    //评价
+    Route::post('comment', 'IndexController@comment');
+
+
+
+    //下单
+    Route::post('add_order', 'IndexController@add_order');
+    //确认订单
+    Route::post('checkout', 'IndexController@checkout');
+    //取消订单
+    Route::post('del_order', 'IndexController@del_order');
+
+    //付款
+    Route::post('pay', 'IndexController@pay');
+    //付款回调
+    Route::any('paid', 'IndexController@paid');
+    //退款
+    Route::post('refund', 'IndexController@refund');
+    //退款回调
+    Route::any('refund_back', 'IndexController@refund_back');
+
+
+
     //我的地址
     Route::get('address', 'IndexController@address');
     //新增地址
@@ -61,6 +124,8 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
 
     //我的订单
     Route::get('order', 'IndexController@order');
+    //订单
+    Route::get('order_info/{id}', 'IndexController@order_info');
     //完成订单
     Route::post('finish', 'IndexController@finish');
     //修改订单

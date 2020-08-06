@@ -2,24 +2,32 @@
 
 namespace App\Http\Controllers\Wechat;
 
+use App\Handlers\WechatConfigHandler;
 use App\Models\Config;
 use App\Models\Customer;
 use App\Models\Shop\Address;
+use App\Models\Shop\Cart;
 use App\Models\Shop\Category;
 use App\Models\Shop\Coin;
+use App\Models\Shop\Comment;
 use App\Models\Shop\Order;
+use App\Models\Shop\OrderAddress;
 use App\Models\Shop\Product;
+use App\Models\Shop\Withdraw;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class IndexController extends Controller
 {
 
-    public function __construct()
-    {
+    protected $wechat;
 
+    public function __construct(WechatConfigHandler $wechat)
+    {
+        $this->wechat = $wechat;
     }
 
     public function auth(Request $request)
@@ -27,14 +35,15 @@ class IndexController extends Controller
         //声明CODE，获取小程序传过来的CODE
         $code = $request->code;
         //配置appid
-        $appid = env('WECHAT_MINI_PROGRAM_APPID', '');
+        $appid = 'wxc17fa5e880635165';
         //配置appscret
-        $secret = env('WECHAT_MINI_PROGRAM_SECRET', '');
+        $secret = '05cc5f89ffe0f93d023937c3af593b5a';
         //api接口
         $api = "https://api.weixin.qq.com/sns/jscode2session?appid={$appid}&secret={$secret}&js_code={$code}&grant_type=authorization_code";
 
         $str = json_decode($this->httpGet($api), true);
 
+//return $str;
         $openid = $str['openid'];
 
         $customer = Customer::where('openid', $openid)->first();
@@ -49,8 +58,17 @@ class IndexController extends Controller
             ]);
 
         } else {
-            Customer::create([
+
+            $invitation_code = substr($code, 0, 4) . substr($openid, 0, 2);
+
+            $register_url = 'pages/AuthLogin/AuthLogin?openid' . $openid;
+
+            QrCode::encoding('UTF-8')->format('png')->size(500)->generate($register_url, storage_path('qrcodes/' . $openid . '.png'));
+
+            $customer = Customer::create([
                 'openid' => $openid,
+                'code' => $invitation_code,
+                'code_image' => 'https://' . $_SERVER['SERVER_NAME'] . '/storage/qrcodes/' . $openid . '.png',
                 'headimgurl' => $request->headimgurl,
                 'nickname' => $request->nickname,
                 'tel' => $request->tel,
@@ -99,6 +117,13 @@ class IndexController extends Controller
         return $arrMing;
     }
 
+    //获取奖项
+    function getDrawList()
+    {
+        $arrDraw = array('一等奖', '二等奖', '三等奖');
+        return $arrDraw;
+    }
+
     //获取时间
     function getTimeList()
     {
@@ -127,13 +152,18 @@ class IndexController extends Controller
         $arrTime = $this->getTimeList();
         $numbTime = count($arrTime);
 
+        $arrDraw = $this->getDrawList();
+        $numbDraw = count($arrDraw);
+
         $info = [];
         for ($i = 1; $i < 10; $i++) {
             $Xing = $arrXing[mt_rand(0, $numbXing - 1)];
             $Ming = $arrMing[mt_rand(0, $numbMing - 1)];
             $Time = $arrTime[mt_rand(0, $numbTime - 1)];
+            $Draw = $arrDraw[mt_rand(0, $numbDraw - 1)];
 
-            $info[$i]['name'] = $Xing . $Ming . '抽中了一等奖';
+            $info[$i]['name'] = $Xing . $Ming;
+            $info[$i]['draw'] = $Draw;
             $info[$i]['time'] = $Time;
         }
 
@@ -153,39 +183,38 @@ class IndexController extends Controller
     {
         $categories = Category::with(['children' => function ($query) {
             $query->orderby('sort_order')->get();
-        }])->where('is_show', true)->where('parent_id', 0)->orderby('pinyin')->get()->groupby('pinyin');
+        }])->where('is_show', true)->where('parent_id', 0)->orderby('pinyin')->get();//->groupby('pinyin');
 
         return $this->array(['categories' => $categories]);
     }
 
     public function category(Request $request, $id)
     {
-        //多条件查找
-        $where = function ($query) use ($request, $id) {
-            $query->where('category_id', $id);
+        // //多条件查找
+        // $where = function ($query) use ($request, $id) {
 
-            if ($request->has('sale_num') and $request->sale_num != '') {
+        //     $query->where('category_id', $id);
+        // };
 
-                $query->orderby('sale_num', 'desc');
-            }
-            if ($request->has('price_desc') and $request->price_desc != '') {
+        $products = Product::where('is_sale',true)->where('category_id', $id)->paginate($request->total);
+        if ($request->has('sale_num') and $request->sale_num != '') {
+            $products = Product::where('is_sale',true)->where('category_id', $id)->orderby('sale_num', 'desc')->paginate($request->total);
 
-                $query->orderby('price_desc', 'desc');
-            }
-            if ($request->has('price_asc') and $request->price_asc != '') {
+        }
+        if ($request->has('price_desc') and $request->price_desc != '') {
+            $products = Product::where('is_sale',true)->where('category_id', $id)->orderby('price', 'desc')->paginate($request->total);
 
-                $query->orderby('price_asc', 'asc');
-            }
+        }
+        if ($request->has('price_asc') and $request->price_asc != '') {
+            $products = Product::where('is_sale',true)->where('category_id', $id)->orderby('price', 'asc')->paginate($request->total);
 
-        };
-        $products = Product::where($where)->paginate($request->total);
+        }
+
 
         $page = isset($page) ? $request['page'] : 1;
         $products = $products->appends(array(
             'page' => $page,
             'sale_num' => $request->sale_num,
-            'price_desc' => $request->price_desc,
-            'price_asc' => $request->price_asc,
         ));
 
         return $this->array(['list' => $products]);
@@ -199,32 +228,45 @@ class IndexController extends Controller
 
     public function search(Request $request)
     {
-        $where = function ($query) use ($request) {
-            $keyword = '%' . $request->keyword . '%';
-            $query->where('name', 'like', $keyword);
+        $keyword = '%' . $request->keyword . '%';
+        //  $where = function ($query) use ($request) {
+        //     $keyword = '%' . $request->keyword . '%';
+        //     $query->where('name', 'like', $keyword);
 
-            if ($request->has('sale_num') and $request->sale_num != '') {
+        //     if ($request->has('sale_num') and $request->sale_num != '') {
 
-                $query->orderby('sale_num', 'desc');
-            }
-            if ($request->has('price_desc') and $request->price_desc != '') {
+        //         $query->orderby('sale_num', 'desc');
+        //     }
+        //     if ($request->has('price_desc') and $request->price_desc != '') {
 
-                $query->orderby('price_desc', 'desc');
-            }
-            if ($request->has('price_asc') and $request->price_asc != '') {
+        //         $query->orderby('price', 'desc');
+        //     }
+        //     if ($request->has('price_asc') and $request->price_asc != '') {
 
-                $query->orderby('price_asc', 'asc');
-            }
+        //         $query->orderby('price', 'asc');
+        //     }
 
-        };
-        $products = Product::where($where)->where('id','>',0)->paginate($request->total);
+        // };
+        $products = Product::where('is_sale',true)->where('name', 'like', $keyword)->where('id', '>', 0)->paginate($request->total);
+        if ($request->has('sale_num') and $request->sale_num != '') {
+            $products = Product::where('is_sale',true)->where('name', 'like', $keyword)->where('id', '>', 0)->orderby('sale_num', 'desc')->paginate($request->total);
+
+        }
+        if ($request->has('price_desc') and $request->price_desc != '') {
+            $products = Product::where('is_sale',true)->where('name', 'like', $keyword)->where('id', '>', 0)->orderby('price', 'desc')->paginate($request->total);
+
+        }
+        if ($request->has('price_asc') and $request->price_asc != '') {
+            $products = Product::where('is_sale',true)->where('name', 'like', $keyword)->where('id', '>', 0)->orderby('price', 'asc')->paginate($request->total);
+
+        }
+
+        //    $products = Product::where($where)->where('id','>',0)->paginate($request->total);
         $page = isset($page) ? $request['page'] : 1;
         $products = $products->appends(array(
             'page' => $page,
             'keyword' => $request->keyword,
             'sale_num' => $request->sale_num,
-            'price_desc' => $request->price_desc,
-            'price_asc' => $request->price_asc,
         ));
 
         return $this->array(['list' => $products]);
@@ -279,13 +321,13 @@ class IndexController extends Controller
 
                 $this->error(500, $error);
             }
-            $num=Address::where('customer_id', $customer->id)->where('is_default',1)->count();
-            $is_default=$request->is_default;
-            if($num==0){
-                $is_default=1;
-            }else{
+            $num = Address::where('customer_id', $customer->id)->where('is_default', 1)->count();
+            $is_default = $request->is_default;
+            if ($num == 0) {
+                $is_default = 1;
+            } else {
 
-                if($is_default==1){
+                if ($is_default == 1) {
                     Address::where('customer_id', $customer->id)->update(['is_default' => 0]);
                 }
             }
@@ -335,8 +377,8 @@ class IndexController extends Controller
         $customer = Customer::where('openid', $openid)->first();
 
         $pca = explode(",", $request->pca);
-        $is_default=$request->is_default;
-        if($is_default==1){
+        $is_default = $request->is_default;
+        if ($is_default == 1) {
             Address::where('customer_id', $customer->id)->update(['is_default' => 0]);
         }
         Address::where('id', $id)->update([
@@ -428,9 +470,9 @@ class IndexController extends Controller
         activity()->inLog('coin')
             ->performedOn($customer)
             ->causedBy($customer)
-            ->withProperties(['type' => 1, 'coin' => $coin])
+            ->withProperties(['type' => '+', 'num' => $coin])
             ->log('每日签到积分');
-        $customer->coin+=$coin;
+        $customer->coin += $coin;
         $customer->save();
 
         return $this->null();
@@ -438,7 +480,7 @@ class IndexController extends Controller
 
     public function draw()
     {
-        $products=Product::where('is_prize',true)->limit(7)->select('id','name','image')->get()->toarray();
+        $products = Product::where('is_sale',true)->where('is_prize', true)->limit(7)->select('id', 'name', 'image')->get()->toarray();
 
         return $this->array(['list' => $products]);
     }
@@ -456,7 +498,8 @@ class IndexController extends Controller
      * 这个算法简单，而且效率非常高，
      * 这个算法在大数据量的项目中效率非常棒。
      */
-    function get_rand($proArr) {
+    function get_rand($proArr)
+    {
         $result = '';
         //概率数组的总概率精度
         $proSum = array_sum($proArr);
@@ -476,26 +519,30 @@ class IndexController extends Controller
 
     public function do_draw(Request $request)
     {
+        $configs = Config::first();
+        $draw_coin = $configs->draw_coin;
+
         $openid = $request->openid;
-        $coin = $request->coin;
+        $coin = $request->coin ? $request->coin : $draw_coin;
+
 
         if (!$openid) {
             return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
-        if ($customer->coin<$coin){
+        if ($customer->coin < $coin) {
             return $this->error(4);
         }
-        $customer->coin=$customer->coin-$coin;
+        $customer->coin = $customer->coin - $coin;
         $customer->save();
         activity()->inLog('coin')
             ->performedOn($customer)
             ->causedBy($customer)
-            ->withProperties(['type' => 0, 'coin' => $coin])
+            ->withProperties(['type' => '-', 'num' => $coin])
             ->log($coin . '积分抽奖');
         //开始抽奖
-        $prize_arr=Product::where('is_prize',true)->limit(8)->select('id','name','image','rate_o','rate_f')->get()->toarray();
+        $prize_arr = Product::where('is_prize', true)->limit(8)->select('id', 'name', 'image', 'rate_o', 'rate_f', 'rate_d')->get()->toarray();
 
         /*
          * 每次前端页面的请求，PHP循环奖项设置数组，
@@ -504,41 +551,55 @@ class IndexController extends Controller
          * 而剩下的未中奖的信息保存在$res['no']中，
          * 最后输出json个数数据给前端页面。
          */
-        $rate_type=$coin==10?'rate_o':'rate_f';
+        if ($coin == 10) {
+            $rate_type = 'rate_o';
+        } elseif ($coin == 50) {
+            $rate_type = 'rate_f';
+        } else {
+            $rate_type = 'rate_d';
+        }
         foreach ($prize_arr as $key => $val) {
             $arr[$val['id']] = $val[$rate_type];
         }
         $result = $this->get_rand($arr); //根据概率获取奖项id
 
         //抽奖完成
-        if ($result>0){
-            $product=Product::find($result);
-            $product->sale_num+=1;
+        if ($result > 0) {
+            $product = Product::find($result);
+            $product->sale_num += 1;
             $product->save();
 
-            $order_sn = date('YmdHms', time()) . $customer->id. $result;
-            $address=Address::where('customer_id',$customer->id)->where('is_default',true)->first();
+            $order_sn = date('YmdHms', time()) . $customer->id . $result;
+            $address = Address::where('customer_id', $customer->id)->where('is_default', true)->first();
 
-            Order::create([
+            $order = Order::create([
                 'customer_id' => $customer->id,
                 'order_sn' => $order_sn,
-                'product_id' => $result,
                 'total_price' => $product->price,
                 'status' => 2,
-                'name' => $address?$address->name:'',
-                'tel' => $address?$address->tel:'',
-                'pay_time' => date('Y-m-d H:i:s',time()),
-                'address' => $address?$address->province.''.$address->city.''.$address->area.''.$address->detail:'',
+                'pay_type' => 2,
+                'pay_time' => date('Y-m-d H:i:s', time()),
+                'address_id' => $address->id,
             ]);
 
-            if(!$address){
-                return $this->error(6);
-            }
+            $order->order_products()->create(['product_id' => $product->id, 'num' => 1, 'price' => $product->price, 'sku' => '']);
+
+            $order->address()->create([
+                'province' => $address->province,
+                'city' => $address->city,
+                'area' => $address->area,
+                'detail' => $address->detail,
+                'tel' => $address->tel,
+                'name' => $address->name
+            ]);
+            // if(!$address){
+            //     return $this->error(6);
+            // }
             activity()->inLog('draw')
                 ->performedOn($product)
                 ->causedBy($customer)
                 ->withProperties([])
-                ->log('抽中'.$product->name);
+                ->log('抽中' . $product->name);
 
             return $this->object($product);
         }
@@ -575,9 +636,12 @@ class IndexController extends Controller
                 case '4':
                     $query->where('status', 4);
                     break;
+                case '5':
+                    $query->where('status', 5);
+                    break;
             }
         };
-        $orders = Order::where($where)->paginate($request->total);
+        $orders = Order::with('product')->where($where)->orderby('created_at', 'desc')->paginate($request->total);
 
         $page = isset($page) ? $request['page'] : 1;
         $orders = $orders->appends(array(
@@ -599,11 +663,25 @@ class IndexController extends Controller
 
         $order = Order::where('customer_id', $customer->id)->find($order_id);
         if ($order->status == 3) {
-            $order->status = 4;
+            $order->status = 5;
             $order->save();
         }
 
         return $this->null();
+    }
+
+    public function order_info(Request $request, $id)
+    {
+        $openid = $request->openid;
+        if (!$openid) {
+            return $this->error(2);
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $order = Order::with('product.category')->where('customer_id', $customer->id)->find($id);
+
+
+        return $this->array(['order' => $order]);
     }
 
     public function order_address(Request $request)
@@ -613,7 +691,9 @@ class IndexController extends Controller
 
         $name = $request->name;
         $tel = $request->tel;
-        $address = $request->pca.$request->detail;
+        $address = explode(",", $request->pca);
+        $detail = $request->detail;
+
 
         if (!$openid) {
             return $this->error(2);
@@ -621,11 +701,597 @@ class IndexController extends Controller
 
         $customer = Customer::where('openid', $openid)->first();
 
-        $order = Order::where('customer_id', $customer->id)->find($order_id);
+        $order_address = OrderAddress::where('order_id', $order_id)->fist();
 
-        $order->name = $name;
-        $order->tel = $tel;
-        $order->address = $address;
+        $order_address->name = $name;
+        $order_address->tel = $tel;
+        $order_address->province = $address[0];
+        $order_address->city = $address[1];
+        $order_address->area = $address[2];
+        $order_address->detail = $detail;
+        $order_address->save();
+
+        return $this->null();
+    }
+
+    /**
+     * 二期
+     */
+    public function group(Request $request)
+    {
+        $openid = $request->openid;
+        $type = $request->type;  //0直接邀请 1间接邀请
+        $customer = Customer::where('openid', $openid)->first();
+
+        $customer_id = $customer->id;
+
+        if ($type == 0) {
+            $customers = Customer::where('parent_id', $customer_id)->paginate($request->total);
+        } else {
+            $ps = Customer::where('parent_id', $customer_id)->pluck('id');
+            $customers = Customer::wherein('parent_id', $ps)->paginate($request->total);
+        }
+        $page = isset($page) ? $request['page'] : 1;
+        $customers = $customers->appends(array(
+            'page' => $page,
+        ));
+
+        return $this->array(['list' => $customers]);
+    }
+
+    public function code(Request $request)
+    {
+
+        $openid = $request->openid;
+        $customer = Customer::where('openid', $openid)->first();
+
+
+        $code = $request->code;
+        $customer_id = $customer->id;
+        $customer = Customer::find($customer_id);
+
+        $parent = Customer::where('code', $code)->first();
+        if (!empty($parent)) {
+            $customer->parent_id = $parent->id;
+            $customer->save();
+            return $this->null();
+        } else {
+            return $this->error(500, '邀请码错误！');
+        }
+    }
+
+    public function do_withdraw(Request $request)
+    {
+
+        $openid = $request->openid;
+        $customer = Customer::where('openid', $openid)->first();
+
+        try {
+            $messages = [
+                'money.required' => '提现金额不能为空!',
+                'alipay.required' => '支付宝不能为空!',
+                'name.required' => '收款人姓名不能为空!',
+            ];
+            $rules = [
+                'money' => 'required',
+                'alipay' => 'required',
+                'name' => 'required',
+            ];
+            $validator = Validator::make($request->all(), $rules, $messages);
+            if ($validator->fails()) {
+                $error = $validator->errors()->first();
+
+                $this->error(500, $error);
+            }
+
+            // $request->offsetSet('customer_id', $customer->id);
+
+
+            Withdraw::create([
+                'customer_id' => $customer->id,
+                'money' => $request->money,
+                'name' => $request->name,
+                'alipay' => $request->alipay,
+            ]);
+
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+
+            $this->error(500, $exception->getMessage());
+        }
+
+        return $this->null();
+    }
+
+    public function upload_img(Request $request)
+    {
+
+        if ($request->hasFile('file') and $request->file('file')->isValid()) {
+
+            //文件大小判断$filePath
+            $max_size = 1024 * 1024 * 3;
+            $size = $request->file('file')->getClientSize();
+            if ($size > $max_size) {
+                return $this->error(500, '文件大小不能超过3M！');
+            }
+
+            $path = $request->file->store('upload', 'public');
+
+            return $this->array(['image' => '/' . $path, 'image_url' => '/' . $path]);
+
+        }
+    }
+
+    function add_cart(Request $request)
+    {
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+            return $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+        $addresses = Address::where('customer_id', $customer->id)->get();
+        if (empty($addresses)) {
+            return $this->error(500, '请填写收货地址');
+        }
+        //判断购物车是否有当前商品,如果有,那么 num +1
+        $product_id = $request->product_id;
+
+        $cart = Cart::where('product_id', $product_id)->where('sku', $request->sku)->where('customer_id', $customer->id)->first();
+
+        if ($cart) {
+            Cart::where('id', $cart->id)->increment('num');
+        } else {
+            //否则购物车表,创建新数据
+            $cart = Cart::create([
+                'product_id' => $request->product_id,
+                'num' => $request->num,
+                'sku' => $request->sku,
+                'customer_id' => $customer->id,
+            ]);
+        }
+
+        return $this->object('添加到购物车', $cart);
+    }
+
+    public function cart(Request $request)
+    {
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+            return $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $carts = Cart::with('product')->where('customer_id', $customer->id)->get();
+
+        $count = Cart::count_cart($carts, $customer->id);
+
+
+        return $this->array(['customer' => $customer, 'carts' => $carts, 'count' => $count,]);
+    }
+
+    function change_num(Request $request)
+    {
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+            return $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        if ($request->type == 'add') {
+            Cart::where('id', $request->id)->increment('num');
+        } else {
+            Cart::where('id', $request->id)->decrement('num');
+        }
+        $count = Cart::count_cart('', $customer->id);
+        // return $count;
+        return $this->array($count);
+    }
+
+    function destroy_checked(Request $request)
+    {
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+            return $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $checked_id = explode(',', $request->checked_id);
+        Cart::wherein('id', $checked_id)->delete();
+
+        $count = Cart::count_cart('', $customer->id);
+
+        return $this->array($count);
+    }
+
+    public function del_order(Request $request)
+    {
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+            return $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $id = $request->order_id;
+
+        Order::where('customer_id', $customer->id)->where('id', $id)->delete();
+
+        return $this->null();
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     */
+    public function refund(Request $request)
+    {
+        $order_id = $request->order_id;
+        $order = Order::find($order_id);
+        $total_price = $order->total_price;
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+             $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $out_refund_no = date('YmdHms', time()) . '_' . $customer->id;//商户系统内部的退款单号
+        $out_trade_no = $order->order_sn;//商户系统内部订单号
+        $total_fee = $total_price * 100;
+        $refund_fee = $total_price * 100;
+        $app = $this->wechat->pay();
+
+        // 参数分别为：微信订单号、商户退款单号、订单金额、退款金额、其他参数
+        $result = $app->refund->byOutTradeNumber($out_trade_no, $out_refund_no, $total_fee, $refund_fee, [
+            // 可在此处传入其他参数，详细参数见微信支付文档
+            'refund_desc' => '退款',
+            'notify_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/api/wechat/refund_back',
+        ]);
+
+        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
+             $this->error(200, '退款申请请求成功');
+        }
+
+         $this->error(500, '退款申请请求失败~');
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \EasyWeChat\Kernel\Exceptions\Exception
+     */
+    public function refund_back(Request $request)
+    {
+        $app = $this->wechat->pay();
+        $response = $app->handleRefundedNotify(function ($message, $reqInfo, $fail) use ($request) {
+            // 其中 $message['req_info'] 获取到的是加密信息
+            // $reqInfo 为 message['req_info'] 解密后的信息
+
+            $order = Order::where('order_sn', $reqInfo['out_trade_no'])->first();
+
+            if (!$order || $order->status == '6') { // 如果订单不存在 或者 订单已经退过款了
+                return $this->error(200, '退款成功~'); // 告诉微信，我已经处理完了，订单没找到，别再通知我了
+            }
+            if ($message['return_code'] == 'SUCCESS') {
+                if ($reqInfo['refund_status'] == 'SUCCESS') {
+                    $order->finish_time = date('Y-m-d H:i:s', time());
+                    $order->status = 6;
+                    $order->save();
+
+                    $customer_id = $order->customer_id;
+                    $customer = Customer::find($customer_id);
+
+                    $activity = activity()->inLog('refund')
+                        ->performedOn($customer)
+                        ->withProperties(['type' => '+', 'num' => $order->total_price])
+                        ->causedBy($customer)
+                        ->log("微信退款");
+                }
+                return $this->error(200, '退款成功~'); // 返回 true 告诉微信“我已处理完成”
+                // 或返回错误原因 $fail('参数格式校验错误');
+            } else {
+                return $fail('参数格式校验错误');
+            }
+
+        });
+
+        return $response;
+    }
+
+    /**
+     * 购物车点击结算跳到下单页面，即check_out
+     * 此页面需要的数据：用户的收货地址；要购买的商品信息；若购物车没有商品，跳回购物车页面。
+     */
+    public function checkout(Request $request)
+    {
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+            return $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        if ($request->cart_id) {
+            $cart_id = $request->cart_id;
+            $cart_id_ = explode(',', $cart_id);
+            $carts = Cart::with('product')->whereIn('id', $cart_id_)->get();
+
+            $count = Cart::count_cart($carts, $customer->id);
+        }
+        if ($request->product_id) {
+            $carts = [];
+            $product = Product::find($request->product_id);
+            $total_price = $product->price;
+
+            $carts[0]['product'] = $product;
+            $carts[0]['num'] = $request->num;
+            $carts[0]['sku'] = $request->sku;
+
+            $count['num'] = $request->num;
+            $count['total_price'] = $total_price * $request->num;;
+        }
+        $address = Address::find($customer->address_id);
+
+        return $this->array(['carts' => $carts, 'count' => $count, 'address' => $address]);
+    }
+
+    public function add_order(Request $request)
+    {
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+            return $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $product_id = $request->product_id;
+        $cart_id = $request->cart_id;
+
+        $order_sn = date('YmdHms', time()) . '_' . $customer->id;
+
+        if ($product_id) {
+            $product = Product::find($product_id);
+            $total_price = $product->price;
+
+
+            $num = $request->num ? $request->num : 1;
+            $product->sale_num += $num;
+            $product->save();
+
+            $order = Order::create([
+                'customer_id' => $customer->id,
+                'order_sn' => $order_sn,
+                'address_id' => $request->address_id,
+                'total_price' => $total_price * $num,
+                'remark' => $request->remark,
+            ]);
+            $address = Address::find($request->address_id);
+            $order->address()->create([
+                'province' => $address->province,
+                'city' => $address->city,
+                'area' => $address->area,
+                'detail' => $address->detail,
+                'tel' => $address->tel,
+                'name' => $address->name
+            ]);
+
+            $order->order_products()->create(['product_id' => $product_id, 'num' => $request->num, 'sku' => $request->sku]);
+            $result = Order::with('order_products.product', 'address')->find($order->id);
+        }
+
+        if ($cart_id) {
+
+            $cart_id_ = explode(',', $cart_id);
+            $carts = Cart::with('product')->whereIn('id', $cart_id_)->get();
+
+            if (count($carts) < 1) {
+                return $this->error(500, '请勿重复下单~');
+            }
+
+            $count = Cart::count_cart($carts, $customer->id);
+            $total_price = $count['total_price'];
+
+            $order = Order::create([
+                'customer_id' => $customer->id,
+                'order_sn' => $order_sn,
+                'address_id' => $request->address_id,
+                'total_price' => $total_price,
+                'remark' => $request->remark,
+            ]);
+            $address = Address::find($request->address_id);
+            $order->address()->create([
+                'province' => $address->province,
+                'city' => $address->city,
+                'area' => $address->area,
+                'detail' => $address->detail,
+                'tel' => $address->tel,
+                'name' => $address->name
+            ]);
+
+            foreach ($carts as $cart) {
+                $product = Product::find($cart['product_id']);
+
+                $product->sale_num += $cart->num;
+                $product->save();
+
+                $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'num' => $cart->num, 'sku' => $cart->sku]);
+                if ($result_) {
+                    Cart::destroy($cart->id);
+                }
+            }
+            $result = Order::with('order_products.product', 'address')->find($order->id);
+        }
+        return $this->array($result);
+
+    }
+
+    public function pay(Request $request)
+    {
+
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+            return $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $address_id = $request->address_id;
+        $cart_id = $request->cart_id;
+        $order_id = $request->order_id;
+        $remark = $request->remark;
+
+        $app = $this->wechat->pay();
+
+        $title = '';
+        if ($order_id) {
+            $order = Order::with('order_products.product')->find($order_id);
+            $total_price = $order->total_price;
+            $order_sn = $order->order_sn;
+            $products = $order->order_products;
+            foreach ($products as $product) {
+                $title .= $product->product->name . '_';
+            }
+
+            $w_order = $app->order->queryByOutTradeNumber($order_sn);
+
+            // if ($w_order['trade_state'] == "NOTPAY") {
+
+            $order_config = [
+                'body' => $title,
+                'out_trade_no' => date('YmdHms', time()) . '_' . $customer->id,
+                'total_fee' => $total_price * 100,
+                //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+                'notify_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/api/wechat/paid', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+                'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
+                'openid' => $openid,
+            ];
+
+            $order->order_sn = $order_config['out_trade_no'];
+            $order->save();
+
+            //重新生成预支付生成订单
+            $result = $app->order->unify($order_config);
+
+            if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
+                $prepayId = $result['prepay_id'];
+
+                $config = $app->jssdk->sdkConfig($prepayId);
+                return response()->json($config);
+            }
+            // }
+
+        } else {
+            $carts = Cart::with('product')->whereIn('id', $cart_id)->get();
+            $count = Cart::count_cart($carts, $customer->id);
+            $total_price = $count['total_price'];
+            $order_sn = date('YmdHms', time()) . '_' . $customer->id;
+
+            foreach ($carts as $cart) {
+                $title .= $cart->product->name . '_';
+            }
+
+            $order_config = [
+                'body' => $title,
+                'out_trade_no' => $order_sn,
+                'total_fee' => $total_price * 100,
+                //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+                'notify_url' => 'https://' . $_SERVER['HTTP_HOST'] . '/api/wechat/paid', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+                'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
+                'openid' => $openid,
+            ];
+
+            //生成订单
+            $result = $app->order->unify($order_config);
+            if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
+                $order = Order::create([
+                    'customer_id' => $customer->id,
+                    'order_sn' => $order_sn,
+                    'total_price' => $total_price,
+                    'remark' => $remark,
+                    'address_id' => $address_id,
+                ]);
+                $address = Address::find($address_id);
+                $order->address()->create([
+                    'province' => $address->province,
+                    'city' => $address->city,
+                    'area' => $address->area,
+                    'detail' => $address->detail,
+                    'tel' => $address->tel,
+                    'name' => $address->name
+                ]);
+
+                foreach ($carts as $cart) {
+                    $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'sku' => $cart->sku, 'num' => $cart->num]);
+                    if ($result_) {
+                        Cart::destroy($cart->id);
+                    }
+                }
+                $prepayId = $result['prepay_id'];
+
+                $config = $app->jssdk->sdkConfig($prepayId);
+                return response()->json($config);
+            }
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \EasyWeChat\Kernel\Exceptions\Exception
+     */
+    public function paid(Request $request)
+    {
+        $app = $this->wechat->pay();
+        $response = $app->handlePaidNotify(function ($message, $fail) use ($request) {
+            // 使用通知里的 "微信支付订单号" 或者 "商户订单号" 去自己的数据库找到订单
+            $order = Order::where('order_sn', $message['out_trade_no'])->first();
+
+            ///////////// <- 建议在这里调用微信的【订单查询】接口查一下该笔订单的情况，确认是已经支付 /////////////
+            if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
+                // 用户是否支付成功
+                if (array_get($message, 'result_code') === 'SUCCESS') {
+                    $order->pay_time = date('Y-m-d H:i:s', time()); // 更新支付时间为当前时间
+                    $order->status = 2;
+                    $order->save();
+
+                    $customer_id = $order->customer_id;
+                    $customer = Customer::find($customer_id);
+
+                    activity()->inLog('buy')
+                        ->performedOn($customer)
+                        ->causedBy($order)
+                        ->withProperties(['type' => '-', 'num' => $order->total_price])
+                        ->log('购买商品');
+
+                }
+            } else {
+                return $fail('通信失败，请稍后再通知我');
+            }
+
+            return true; // 返回处理完成
+        });
+
+        return $response;
+    }
+
+    public function comment(Request $request)
+    {
+        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        if (!$openid) {
+            return $this->error(500, '用户不存在');
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        Comment::create([
+            'order_id' => $request->order_id,
+            'product_id' => $request->product_id,
+            'customer_id' => $customer->id,
+            'image' => $request->image,
+            'content' => $request['content'],
+        ]);
+
+        $order = Order::find($request->order_id);
+
+        $order->status = 5;
+        $order->comment_time = date('Y-m-d H:i:s', time());
+        $order->finish_time = date('Y-m-d H:i:s', time());
         $order->save();
 
         return $this->null();
