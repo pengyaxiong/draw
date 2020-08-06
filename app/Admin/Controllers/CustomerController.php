@@ -66,6 +66,7 @@ class CustomerController extends AdminController
         $grid->column('language', __('Language'))->hide();
         $grid->column('tel', __('Tel'))->editable();
         $grid->column('coin', __('积分'));
+        $grid->column('money', __('Money'));
         $grid->column('country', __('Country'))->hide();
         $grid->column('province', __('Province'))->hide();
         $grid->column('city', __('City'))->hide();

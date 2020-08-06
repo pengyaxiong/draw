@@ -45,6 +45,8 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
     Route::get('categories', 'IndexController@categories');
     //分类商品
     Route::get('category/{id}', 'IndexController@category');
+    //积分商城
+    Route::get('coin_category', 'IndexController@coin_category');
     //商品详情
     Route::get('product/{id}', 'IndexController@product');
     //搜索
@@ -56,6 +58,13 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
     /**
      * 二期
      */
+    //关于我们
+    Route::get('about', 'IndexController@about');
+    //帮助中心
+    Route::get('problem_category', 'IndexController@problem_category');
+    //帮助中心详情
+    Route::get('problem/{id}', 'IndexController@problem');
+
     //上传图片
     Route::post('upload_img', 'IndexController@upload_img');
 
@@ -79,6 +88,9 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
 
     //评价
     Route::post('comment', 'IndexController@comment');
+
+    //积分兑换
+    Route::post('exchange', 'IndexController@exchange');
 
 
 

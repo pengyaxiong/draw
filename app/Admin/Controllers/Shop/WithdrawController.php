@@ -128,13 +128,23 @@ class WithdrawController extends AdminController
         //保存前回调
         $form->saving(function (Form $form) {
 
-            if ($form->model()->status==1){
+            if ($form->model()->status == 1) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => '提现已完成，请勿重复提交。。',
                 ]);
             }
-            $form->finish_time=date('Y-m-d H:i:s');
+            $customer = Customer::find($form->model()->customer_id);
+            $customer->money -= $form->model()->money;
+            $customer->save();
+
+            activity()->inLog('money')
+                ->performedOn($customer)
+                ->causedBy(\Admin::user())
+                ->withProperties(['type' => '-', 'num' => $form->model()->money])
+                ->log('余额提现');
+
+            $form->finish_time = date('Y-m-d H:i:s');
         });
 
         return $form;

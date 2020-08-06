@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Wechat;
 
 use App\Handlers\WechatConfigHandler;
+use App\Models\About;
 use App\Models\Config;
 use App\Models\Customer;
+use App\Models\Problem;
+use App\Models\ProblemCategory;
 use App\Models\Shop\Address;
 use App\Models\Shop\Cart;
 use App\Models\Shop\Category;
@@ -179,6 +182,27 @@ class IndexController extends Controller
         return $this->array(['configs' => $configs]);
     }
 
+    public function about()
+    {
+        $about = About::first();
+        return $this->array(['about' => $about]);
+    }
+
+    public function problem_category()
+    {
+        $categories = ProblemCategory::with(['problems' => function ($query) {
+            $query->orderby('sort_order')->get();
+        }])->orderby('pinyin')->get();
+
+        return $this->array(['categories' => $categories]);
+    }
+
+    public function problem($id)
+    {
+        $problem = Problem::find($id);
+        return $this->array(['problem' => $problem]);
+    }
+
     public function categories()
     {
         $categories = Category::with(['children' => function ($query) {
@@ -196,17 +220,17 @@ class IndexController extends Controller
         //     $query->where('category_id', $id);
         // };
 
-        $products = Product::where('is_sale',true)->where('category_id', $id)->paginate($request->total);
+        $products = Product::where('is_sale', true)->where('category_id', $id)->paginate($request->total);
         if ($request->has('sale_num') and $request->sale_num != '') {
-            $products = Product::where('is_sale',true)->where('category_id', $id)->orderby('sale_num', 'desc')->paginate($request->total);
+            $products = Product::where('is_sale', true)->where('category_id', $id)->orderby('sale_num', 'desc')->paginate($request->total);
 
         }
         if ($request->has('price_desc') and $request->price_desc != '') {
-            $products = Product::where('is_sale',true)->where('category_id', $id)->orderby('price', 'desc')->paginate($request->total);
+            $products = Product::where('is_sale', true)->where('category_id', $id)->orderby('price', 'desc')->paginate($request->total);
 
         }
         if ($request->has('price_asc') and $request->price_asc != '') {
-            $products = Product::where('is_sale',true)->where('category_id', $id)->orderby('price', 'asc')->paginate($request->total);
+            $products = Product::where('is_sale', true)->where('category_id', $id)->orderby('price', 'asc')->paginate($request->total);
 
         }
 
@@ -220,9 +244,34 @@ class IndexController extends Controller
         return $this->array(['list' => $products]);
     }
 
+    public function coin_category(Request $request)
+    {
+        //多条件查找
+        $where = function ($query) use ($request) {
+
+            if ($request->has('coin_search') and $request->coin_search != '') {
+                $min = explode('-', $request->coin_search)[0];
+                $max = explode('-', $request->coin_search)[1];
+                $query->whereBetween('coin', [$min, $max]);
+            }
+            $query->where('is_sale', true);
+            $query->where('is_exchange', true);
+        };
+
+        $products = Product::where($where)->orderby('order_sort')->paginate($request->total);
+
+        $page = isset($page) ? $request['page'] : 1;
+        $products = $products->appends(array(
+            'page' => $page,
+            'sale_num' => $request->sale_num,
+        ));
+
+        return $this->array(['list' => $products]);
+    }
+
     public function product($id)
     {
-        $product = Product::find($id);
+        $product = Product::with('comments')->find($id);
         return $this->array(['product' => $product]);
     }
 
@@ -247,17 +296,17 @@ class IndexController extends Controller
         //     }
 
         // };
-        $products = Product::where('is_sale',true)->where('name', 'like', $keyword)->where('id', '>', 0)->paginate($request->total);
+        $products = Product::where('is_sale', true)->where('name', 'like', $keyword)->where('id', '>', 0)->paginate($request->total);
         if ($request->has('sale_num') and $request->sale_num != '') {
-            $products = Product::where('is_sale',true)->where('name', 'like', $keyword)->where('id', '>', 0)->orderby('sale_num', 'desc')->paginate($request->total);
+            $products = Product::where('is_sale', true)->where('name', 'like', $keyword)->where('id', '>', 0)->orderby('sale_num', 'desc')->paginate($request->total);
 
         }
         if ($request->has('price_desc') and $request->price_desc != '') {
-            $products = Product::where('is_sale',true)->where('name', 'like', $keyword)->where('id', '>', 0)->orderby('price', 'desc')->paginate($request->total);
+            $products = Product::where('is_sale', true)->where('name', 'like', $keyword)->where('id', '>', 0)->orderby('price', 'desc')->paginate($request->total);
 
         }
         if ($request->has('price_asc') and $request->price_asc != '') {
-            $products = Product::where('is_sale',true)->where('name', 'like', $keyword)->where('id', '>', 0)->orderby('price', 'asc')->paginate($request->total);
+            $products = Product::where('is_sale', true)->where('name', 'like', $keyword)->where('id', '>', 0)->orderby('price', 'asc')->paginate($request->total);
 
         }
 
@@ -471,7 +520,7 @@ class IndexController extends Controller
             ->performedOn($customer)
             ->causedBy($customer)
             ->withProperties(['type' => '+', 'num' => $coin])
-            ->log('每日签到积分');
+            ->log('每日签到奖励积分');
         $customer->coin += $coin;
         $customer->save();
 
@@ -480,7 +529,7 @@ class IndexController extends Controller
 
     public function draw()
     {
-        $products = Product::where('is_sale',true)->where('is_prize', true)->limit(7)->select('id', 'name', 'image')->get()->toarray();
+        $products = Product::where('is_sale', true)->where('is_prize', true)->limit(7)->select('id', 'name', 'image')->get()->toarray();
 
         return $this->array(['list' => $products]);
     }
@@ -567,6 +616,7 @@ class IndexController extends Controller
         if ($result > 0) {
             $product = Product::find($result);
             $product->sale_num += 1;
+            $product->stock -= 1;
             $product->save();
 
             $order_sn = date('YmdHms', time()) . $customer->id . $result;
@@ -606,6 +656,59 @@ class IndexController extends Controller
 
         return $this->error(5);
 
+    }
+
+    public function exchange(Request $request)
+    {
+        $product = Product::find($request->product_id);
+        $openid = $request->openid;
+        $coin = $product->coin;
+        if (!$openid) {
+            return $this->error(2);
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        if ($customer->coin < $coin) {
+            return $this->error(4);
+        }
+
+        $product->sale_num += 1;
+        $product->exchange_num += 1;
+        $product->stock -= 1;
+        $product->save();
+
+        $order_sn = date('YmdHms', time()) . $customer->id;
+        $address = Address::where('customer_id', $customer->id)->where('is_default', true)->first();
+
+        $order = Order::create([
+            'customer_id' => $customer->id,
+            'order_sn' => $order_sn,
+            'total_price' => $product->price,
+            'total_coin' => $coin,
+            'status' => 2,
+            'pay_type' => 3,
+            'pay_time' => date('Y-m-d H:i:s', time()),
+            'address_id' => $address->id,
+        ]);
+
+        $order->order_products()->create(['product_id' => $product->id, 'num' => 1, 'price' => $product->price, 'sku' => '']);
+
+        $order->address()->create([
+            'province' => $address->province,
+            'city' => $address->city,
+            'area' => $address->area,
+            'detail' => $address->detail,
+            'tel' => $address->tel,
+            'name' => $address->name
+        ]);
+
+        activity()->inLog('coin')
+            ->performedOn($product)
+            ->causedBy($customer)
+            ->withProperties(['type' => '-', 'num' => $coin])
+            ->log('积分兑换' . $product->name);
+
+        return $this->object($product);
     }
 
     public function order(Request $request)
@@ -930,7 +1033,7 @@ class IndexController extends Controller
         $total_price = $order->total_price;
         $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
         if (!$openid) {
-             $this->error(500, '用户不存在');
+            $this->error(500, '用户不存在');
         }
         $customer = Customer::where('openid', $openid)->first();
 
@@ -948,10 +1051,10 @@ class IndexController extends Controller
         ]);
 
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-             $this->error(200, '退款申请请求成功');
+            $this->error(200, '退款申请请求成功');
         }
 
-         $this->error(500, '退款申请请求失败~');
+        $this->error(500, '退款申请请求失败~');
     }
 
 
@@ -1054,6 +1157,7 @@ class IndexController extends Controller
 
             $num = $request->num ? $request->num : 1;
             $product->sale_num += $num;
+            $product->stock -= $num;
             $product->save();
 
             $order = Order::create([
@@ -1110,6 +1214,7 @@ class IndexController extends Controller
                 $product = Product::find($cart['product_id']);
 
                 $product->sale_num += $cart->num;
+                $product->stock -= $cart->num;
                 $product->save();
 
                 $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'num' => $cart->num, 'sku' => $cart->sku]);
@@ -1289,6 +1394,34 @@ class IndexController extends Controller
 
         $order = Order::find($request->order_id);
 
+        $pay_type = $order->pay_type;
+        if ($pay_type == 1) {
+            $total_price = $order->total_price;
+            $commission_rate = Config::first()->commission_rate;
+            $goods_rate = Config::first()->goods_rate;
+
+            $g_num=$total_price*$goods_rate;
+            $customer->coin+=$g_num;
+            $customer->save();
+            activity()->inLog('coin')
+                ->performedOn($customer)
+                ->causedBy($order)
+                ->withProperties(['type' => '+', 'num' => $g_num])
+                ->log('购买商品反积分');
+
+            $parent = Customer::find($customer->parent_id);
+            if (!empty($parent)) {
+                $num=$total_price*$commission_rate;
+                $parent->money+=$num;
+                $parent->save();
+                activity()->inLog('money')
+                    ->performedOn($customer)
+                    ->causedBy($order)
+                    ->withProperties(['type' => '+', 'num' => $num])
+                    ->log('下级'.$customer->nickname.'购买商品返佣');
+            }
+
+        }
         $order->status = 5;
         $order->comment_time = date('Y-m-d H:i:s', time());
         $order->finish_time = date('Y-m-d H:i:s', time());
