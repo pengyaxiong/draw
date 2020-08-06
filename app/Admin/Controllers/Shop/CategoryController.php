@@ -42,7 +42,7 @@ class CategoryController extends AdminController
     {
         $grid = new Grid(new Category());
 
-        $grid->model()->orderBy('sort_order');
+        $grid->model()->where('parent_id',0)->orderBy('sort_order');
 
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
