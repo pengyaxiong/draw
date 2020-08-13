@@ -192,7 +192,7 @@ class IndexController extends Controller
     {
         $categories = ProblemCategory::with(['problems' => function ($query) {
             $query->orderby('sort_order')->get();
-        }])->orderby('pinyin')->get();
+        }])->orderby('sort_order')->get();
 
         return $this->array(['categories' => $categories]);
     }
@@ -662,7 +662,7 @@ class IndexController extends Controller
     {
         $product = Product::find($request->product_id);
         $openid = $request->openid;
-        $coin = $product->coin;
+        $coin = $product?$product->coin:999999;
         if (!$openid) {
             return $this->error(2);
         }
@@ -823,6 +823,9 @@ class IndexController extends Controller
     public function group(Request $request)
     {
         $openid = $request->openid;
+        if (!$openid) {
+            return $this->error(2);
+        }
         $type = $request->type;  //0直接邀请 1间接邀请
         $customer = Customer::where('openid', $openid)->first();
 
@@ -846,6 +849,9 @@ class IndexController extends Controller
     {
 
         $openid = $request->openid;
+        if (!$openid) {
+            return $this->error(2);
+        }
         $customer = Customer::where('openid', $openid)->first();
 
 
@@ -867,6 +873,9 @@ class IndexController extends Controller
     {
 
         $openid = $request->openid;
+        if (!$openid) {
+            return $this->error(2);
+        }
         $customer = Customer::where('openid', $openid)->first();
 
         try {
@@ -884,7 +893,7 @@ class IndexController extends Controller
             if ($validator->fails()) {
                 $error = $validator->errors()->first();
 
-                $this->error(500, $error);
+                return  $this->error(500, $error);
             }
 
             // $request->offsetSet('customer_id', $customer->id);
@@ -900,7 +909,7 @@ class IndexController extends Controller
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
 
-            $this->error(500, $exception->getMessage());
+            return $this->error(500, $exception->getMessage());
         }
 
         return $this->null();
@@ -927,9 +936,9 @@ class IndexController extends Controller
 
     function add_cart(Request $request)
     {
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $openid = $request->openid;
         if (!$openid) {
-            return $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
         $addresses = Address::where('customer_id', $customer->id)->get();
@@ -958,9 +967,9 @@ class IndexController extends Controller
 
     public function cart(Request $request)
     {
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $openid = $request->openid;
         if (!$openid) {
-            return $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
@@ -974,9 +983,9 @@ class IndexController extends Controller
 
     function change_num(Request $request)
     {
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $openid = $request->openid;
         if (!$openid) {
-            return $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
@@ -992,9 +1001,9 @@ class IndexController extends Controller
 
     function destroy_checked(Request $request)
     {
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $openid = $request->openid;
         if (!$openid) {
-            return $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
@@ -1008,9 +1017,9 @@ class IndexController extends Controller
 
     public function del_order(Request $request)
     {
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $openid = $request->openid;
         if (!$openid) {
-            return $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
@@ -1030,10 +1039,10 @@ class IndexController extends Controller
     {
         $order_id = $request->order_id;
         $order = Order::find($order_id);
-        $total_price = $order->total_price;
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $total_price = $order?$order->total_price:9999;
+        $openid = $request->openid;
         if (!$openid) {
-            $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
@@ -1051,10 +1060,10 @@ class IndexController extends Controller
         ]);
 
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $this->error(200, '退款申请请求成功');
+           return  $this->error(200, '退款申请请求成功');
         }
 
-        $this->error(500, '退款申请请求失败~');
+        return $this->error(500, '退款申请请求失败~');
     }
 
 
@@ -1107,9 +1116,9 @@ class IndexController extends Controller
      */
     public function checkout(Request $request)
     {
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $openid = $request->openid;
         if (!$openid) {
-            return $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
@@ -1139,9 +1148,9 @@ class IndexController extends Controller
 
     public function add_order(Request $request)
     {
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $openid = $request->openid;
         if (!$openid) {
-            return $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
@@ -1231,9 +1240,9 @@ class IndexController extends Controller
     public function pay(Request $request)
     {
 
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $openid = $request->openid;
         if (!$openid) {
-            return $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
@@ -1378,9 +1387,9 @@ class IndexController extends Controller
 
     public function comment(Request $request)
     {
-        $openid = $request->openid ? $request->openid : 'osJCDuBE6RgIJV8lv1dDq8K4B5eU';
+        $openid = $request->openid;
         if (!$openid) {
-            return $this->error(500, '用户不存在');
+            return $this->error(2);
         }
         $customer = Customer::where('openid', $openid)->first();
 
