@@ -95,7 +95,12 @@ class OrderController extends AdminController
 
         $grid->column('address_id', __('地址'))->display(function ($model) {
             $address = OrderAddress::where('order_id', $this->id)->first();
-            return $address->province . '-' . $address->city . '-' . $address->area . '-' . $address->detail . '-联系人:' . $address->name . '-联系电话:' . $address->tel;
+            if (!$address){
+
+                return '地址未选择';
+            }else{
+                return $address->province . '-' . $address->city . '-' . $address->area . '-' . $address->detail . '-联系人:' . $address->name . '-联系电话:' . $address->tel;
+            }
         });
         $grid->column('express_name', __('Express name'));
         $grid->column('express_code', __('Express code'));
