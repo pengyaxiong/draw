@@ -11,26 +11,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="IndexController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
+      <file leaf-file-name="api.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/api.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-12271">
-              <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+            <state relative-caret-position="339">
+              <caret line="45" column="30" lean-forward="false" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="30" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OrderController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php">
+      <file leaf-file-name="IndexController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="567">
-              <caret line="99" column="29" lean-forward="false" selection-start-line="99" selection-start-column="24" selection-end-line="99" selection-end-column="29" />
-              <folding>
-                <element signature="e#46#74#0#PHP" expanded="true" />
-                <marker date="1600066997927" expanded="true" signature="2378:2546" ph="..." />
-                <marker date="1600066997927" expanded="true" signature="2474:2522" ph="..." />
-              </folding>
+            <state relative-caret-position="381">
+              <caret line="217" column="8" lean-forward="true" selection-start-line="217" selection-start-column="8" selection-end-line="217" selection-end-column="8" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -39,7 +35,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>help</find>
       <find>preCancel</find>
       <find>fnPoint</find>
       <find>pjax-container</find>
@@ -49,7 +44,6 @@
       <find>Product</find>
       <find>type</find>
       <find>between</find>
-      <find>categories</find>
       <find>stock</find>
       <find>about</find>
       <find>do_draw</find>
@@ -69,6 +63,8 @@
       <find>del_order</find>
       <find>pay(</find>
       <find>image</find>
+      <find>categories</find>
+      <find>categories(</find>
     </findStrings>
     <replaceStrings>
       <replace>images</replace>
@@ -132,10 +128,10 @@
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/app/Models/Shop/Product.php" />
         <option value="$PROJECT_DIR$/app/Admin/Controllers/CustomerController.php" />
-        <option value="$PROJECT_DIR$/routes/api.php" />
         <option value="$PROJECT_DIR$/app/Admin/Controllers/Shop/WithdrawController.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php" />
         <option value="$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php" />
+        <option value="$PROJECT_DIR$/routes/api.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php" />
       </list>
     </option>
   </component>
@@ -170,7 +166,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -322,6 +317,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -392,12 +388,14 @@
       <workItem from="1597286853806" duration="3713000" />
       <workItem from="1598350993070" duration="19000" />
       <workItem from="1598609078479" duration="292000" />
-      <workItem from="1600066562380" duration="439000" />
+      <workItem from="1600066562380" duration="768000" />
+      <workItem from="1600228379322" duration="1011000" />
+      <workItem from="1600239411452" duration="177000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="153396000" />
+    <option name="totallyTimeSpent" value="154913000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -741,7 +739,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3381">
           <caret line="166" column="34" lean-forward="false" selection-start-line="166" selection-start-column="23" selection-end-line="166" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -749,7 +746,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2814">
           <caret line="140" column="36" lean-forward="false" selection-start-line="140" selection-start-column="36" selection-end-line="140" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -760,40 +756,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/api.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2268">
-          <caret line="108" column="23" lean-forward="false" selection-start-line="108" selection-start-column="17" selection-end-line="108" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/spatie/laravel-activitylog/src/Models/Activity.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="42">
           <caret line="2" column="35" lean-forward="false" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="35" />
-          <folding>
-            <element signature="e#45#58#0#PHP" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-12271">
-          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
+        <state relative-caret-position="1743">
           <caret line="99" column="29" lean-forward="false" selection-start-line="99" selection-start-column="24" selection-end-line="99" selection-end-column="29" />
           <folding>
             <element signature="e#46#74#0#PHP" expanded="true" />
             <marker date="1600066997927" expanded="true" signature="2378:2546" ph="..." />
             <marker date="1600066997927" expanded="true" signature="2474:2522" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/api.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="339">
+          <caret line="45" column="30" lean-forward="false" selection-start-line="45" selection-start-column="16" selection-end-line="45" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="381">
+          <caret line="217" column="8" lean-forward="true" selection-start-line="217" selection-start-column="8" selection-end-line="217" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>

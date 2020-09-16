@@ -43,6 +43,7 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
 
     //商品分类
     Route::get('categories', 'IndexController@categories');
+    Route::get('category_child/{id}', 'IndexController@category_child');
     //分类商品
     Route::get('category/{id}', 'IndexController@category');
     //积分商城

@@ -212,6 +212,13 @@ class IndexController extends Controller
         return $this->array(['categories' => $categories]);
     }
 
+    public function category_child($id)
+    {
+        $category= Category::with('children')->find($id);
+        
+        return $this->array(['category' => $category]);
+    }
+
     public function category(Request $request, $id)
     {
         // //多条件查找
