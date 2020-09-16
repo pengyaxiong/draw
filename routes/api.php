@@ -59,6 +59,10 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
     /**
      * 二期
      */
+    //商品评论
+    Route::get('product_comments', 'IndexController@product_comments');
+
+
     //关于我们
     Route::get('about', 'IndexController@about');
     //帮助中心

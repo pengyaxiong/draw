@@ -40,7 +40,7 @@ class ProductController extends AdminController
         $grid->column('images', __('Images'))->hide();
         $grid->column('content', __('Content'))->hide();
         $grid->column('description', __('Description'))->hide();
-        $grid->column('sku', __('Sku'));
+//        $grid->column('sku', __('Sku'))->table();
         $grid->column('coin', __('兑换积分'))->editable();
         $grid->column('price', __('Price'))->editable();
         $grid->column('old_price', __('原价'))->editable();
@@ -101,7 +101,7 @@ class ProductController extends AdminController
         $show->field('images', __('Images'));
         $show->field('content', __('Content'));
         $show->field('description', __('Description'));
-        $show->field('sku', __('Sku'));
+//        $show->field('sku', __('Sku'));
         $show->field('coin', __('兑换积分'));
         $show->field('price', __('Price'));
         $show->field('old_price', __('Old price'));
@@ -146,12 +146,12 @@ class ProductController extends AdminController
         $form->ueditor('content', __('Content'))->rules('required');
         $form->textarea('description', __('Description'))->rules('required');
 
-        $form->table('sku', __('Sku'), function ($table) {
-
-            $table->text('category', '类别');
-
-            $table->text('type', '规格')->help('不同规格用英文,隔开');
-        });
+//        $form->table('sku', __('Sku'), function ($table) {
+//
+//            $table->text('category', '类别');
+//
+//            $table->text('type', '规格')->help('不同规格用英文,隔开');
+//        });
 
         
         $form->decimal('coin', __('兑换积分'))->default(99.00);

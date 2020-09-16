@@ -214,8 +214,8 @@ class IndexController extends Controller
 
     public function category_child($id)
     {
-        $category= Category::with('children')->find($id);
-        
+        $category = Category::with('children')->find($id);
+
         return $this->array(['category' => $category]);
     }
 
@@ -265,12 +265,11 @@ class IndexController extends Controller
             $query->where('is_exchange', true);
         };
 
-        $products = Product::where($where)->orderby('order_sort')->paginate($request->total);
+        $products = Product::where($where)->orderby('sort_order')->paginate($request->total);
 
         $page = isset($page) ? $request['page'] : 1;
         $products = $products->appends(array(
             'page' => $page,
-            'sale_num' => $request->sale_num,
         ));
 
         return $this->array(['list' => $products]);
@@ -280,6 +279,36 @@ class IndexController extends Controller
     {
         $product = Product::with('comments')->find($id);
         return $this->array(['product' => $product]);
+    }
+
+    public function product_comments(Request $request)
+    {
+        //多条件查找
+        $where = function ($query) use ($request) {
+            if ($request->has('good') and $request->good != '') {
+                $query->where('grade', '>=',3);
+            }
+            if ($request->has('bad') and $request->bad != '') {
+                $query->where('grade', '<',3);
+            }
+            if ($request->has('photo') and $request->photo != '') {
+                $query->where('images', true);
+            }
+            $query->where('product_id', $request->product_id);
+        };
+        if ($request->has('new') and $request->new != '') {
+            $comments=Comment::where($where)->orderby('created_at','desc')->paginate($request->total);
+        }else{
+            $comments=Comment::where($where)->paginate($request->total);
+        }
+
+        $page = isset($page) ? $request['page'] : 1;
+        $comments = $comments->appends(array(
+            'page' => $page,
+            'product_id' => $request->product_id,
+        ));
+
+        return $this->array(['list' => $comments]);
     }
 
     public function search(Request $request)
@@ -669,7 +698,7 @@ class IndexController extends Controller
     {
         $product = Product::find($request->product_id);
         $openid = $request->openid;
-        $coin = $product?$product->coin:999999;
+        $coin = $product ? $product->coin : 999999;
         if (!$openid) {
             return $this->error(2);
         }
@@ -900,7 +929,7 @@ class IndexController extends Controller
             if ($validator->fails()) {
                 $error = $validator->errors()->first();
 
-                return  $this->error(500, $error);
+                return $this->error(500, $error);
             }
 
             // $request->offsetSet('customer_id', $customer->id);
@@ -1046,7 +1075,7 @@ class IndexController extends Controller
     {
         $order_id = $request->order_id;
         $order = Order::find($order_id);
-        $total_price = $order?$order->total_price:9999;
+        $total_price = $order ? $order->total_price : 9999;
         $openid = $request->openid;
         if (!$openid) {
             return $this->error(2);
@@ -1067,7 +1096,7 @@ class IndexController extends Controller
         ]);
 
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-           return  $this->error(200, '退款申请请求成功');
+            return $this->error(200, '退款申请请求成功');
         }
 
         return $this->error(500, '退款申请请求失败~');
@@ -1404,7 +1433,8 @@ class IndexController extends Controller
             'order_id' => $request->order_id,
             'product_id' => $request->product_id,
             'customer_id' => $customer->id,
-            'image' => $request->image,
+            'images' => is_array($request->images)?$request->images:[],
+            'grade' => $request->grade,
             'content' => $request['content'],
         ]);
 
@@ -1416,8 +1446,8 @@ class IndexController extends Controller
             $commission_rate = Config::first()->commission_rate;
             $goods_rate = Config::first()->goods_rate;
 
-            $g_num=$total_price*$goods_rate;
-            $customer->coin+=$g_num;
+            $g_num = $total_price * $goods_rate;
+            $customer->coin += $g_num;
             $customer->save();
             activity()->inLog('coin')
                 ->performedOn($customer)
@@ -1427,14 +1457,14 @@ class IndexController extends Controller
 
             $parent = Customer::find($customer->parent_id);
             if (!empty($parent)) {
-                $num=$total_price*$commission_rate;
-                $parent->money+=$num;
+                $num = $total_price * $commission_rate;
+                $parent->money += $num;
                 $parent->save();
                 activity()->inLog('money')
                     ->performedOn($customer)
                     ->causedBy($order)
                     ->withProperties(['type' => '+', 'num' => $num])
-                    ->log('下级'.$customer->nickname.'购买商品返佣');
+                    ->log('下级' . $customer->nickname . '购买商品返佣');
             }
 
         }
