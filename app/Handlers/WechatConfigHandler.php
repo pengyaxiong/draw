@@ -47,25 +47,14 @@ class WechatConfigHandler
     //[2-1]微信支付设置
     public function pay_config()
     {
-        $wechat = [
-            'wechat_app_id'=>env('WECHAT_OFFICIAL_ACCOUNT_APPID'),
-            'wechat_secret'=>env('WECHAT_OFFICIAL_ACCOUNT_SECRET'),
-            'pay_mch_id'=>env('PAY_MCH_ID'),
-            'pay_api_key'=>env('PAY_API_KEY'),
-            'pay_cert_path'=>env('PAY_CERT_PATH'),
-            'pay_key_path'=>env('PAY_KEY_PATH'),
-        ];
-        if (!$wechat) {
-            return $config = [];
-        }
         $config = [
-            'app_id'      => $wechat['wechat_app_id'],      // AppID
-            'secret'      => $wechat['wechat_secret'],      // AppSecret
-            'mch_id'      => $wechat['pay_mch_id'],
-            'key'         => $wechat['pay_api_key'],   // API 密钥
+            'app_id'      => env('WECHAT_OFFICIAL_ACCOUNT_APPID'),      // AppID
+            'secret'      => env('WECHAT_OFFICIAL_ACCOUNT_SECRET'),      // AppSecret
+            'mch_id'      => env('PAY_MCH_ID'),
+            'key'         => env('PAY_API_KEY'),   // API 密钥
             // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
-            'cert_path'   => $wechat['pay_cert_path'], // XXX: 绝对路径！！！！
-            'key_path'    => $wechat['pay_key_path'],      // XXX: 绝对路径！！！！
+            'cert_path'   => env('PAY_CERT_PATH'), // XXX: 绝对路径！！！！
+            'key_path'    => env('PAY_KEY_PATH'),      // XXX: 绝对路径！！！！
             'notify_url'  => 'http://'.$_SERVER['HTTP_HOST'].'/wechat/order/index',     // 你也可以在下单时单独设置来想覆盖它
         ];
         return $config;
