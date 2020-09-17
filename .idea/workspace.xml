@@ -24,8 +24,8 @@
       <file leaf-file-name="IndexController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="778" column="47" lean-forward="true" selection-start-line="778" selection-start-column="47" selection-end-line="778" selection-end-column="47" />
+            <state relative-caret-position="498">
+              <caret line="1338" column="0" lean-forward="true" selection-start-line="1338" selection-start-column="0" selection-end-line="1338" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -68,8 +68,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>comment_time</find>
-      <find>withProperties</find>
       <find>activity</find>
       <find>Product</find>
       <find>type</find>
@@ -98,6 +96,8 @@
       <find>add_cart</find>
       <find>comment</find>
       <find>order(</find>
+      <find>order_products</find>
+      <find>order_products()-&gt;create</find>
     </findStrings>
     <replaceStrings>
       <replace>images</replace>
@@ -424,12 +424,12 @@
       <workItem from="1600066562380" duration="768000" />
       <workItem from="1600228379322" duration="1011000" />
       <workItem from="1600239411452" duration="9873000" />
-      <workItem from="1600303746950" duration="2643000" />
+      <workItem from="1600303746950" duration="4066000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="167252000" />
+    <option name="totallyTimeSpent" value="168675000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -836,8 +836,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="778" column="47" lean-forward="true" selection-start-line="778" selection-start-column="47" selection-end-line="778" selection-end-column="47" />
+        <state relative-caret-position="498">
+          <caret line="1338" column="0" lean-forward="true" selection-start-line="1338" selection-start-column="0" selection-end-line="1338" selection-end-column="0" />
           <folding />
         </state>
       </provider>

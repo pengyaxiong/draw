@@ -1222,7 +1222,7 @@ class IndexController extends Controller
                 'name' => $address->name
             ]);
 
-            $order->order_products()->create(['product_id' => $product_id, 'num' => $request->num, 'sku' => $request->sku]);
+            $order->order_products()->create(['product_id' => $product_id, 'price' => $product->price,'num' => $request->num, 'sku' => $request->sku]);
             $result = Order::with('order_products.product', 'address')->find($order->id);
         }
 
@@ -1262,7 +1262,7 @@ class IndexController extends Controller
                 $product->stock -= $cart->num;
                 $product->save();
 
-                $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'num' => $cart->num, 'sku' => $cart->sku]);
+                $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'price' => $product->price,'num' => $cart->num, 'sku' => $cart->sku]);
                 if ($result_) {
                     Cart::destroy($cart->id);
                 }
@@ -1368,7 +1368,7 @@ class IndexController extends Controller
                 ]);
 
                 foreach ($carts as $cart) {
-                    $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'sku' => $cart->sku, 'num' => $cart->num]);
+                    $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'price' => $cart->product->price,'sku' => $cart->sku, 'num' => $cart->num]);
                     if ($result_) {
                         Cart::destroy($cart->id);
                     }
