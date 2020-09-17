@@ -817,7 +817,7 @@ class IndexController extends Controller
         }
         $customer = Customer::where('openid', $openid)->first();
 
-        $order = Order::with('product.category')->where('customer_id', $customer->id)->find($id);
+        $order = Order::with('order_products.product.category')->where('customer_id', $customer->id)->find($id);
 
 
         return $this->array(['order' => $order]);
@@ -1320,7 +1320,6 @@ class IndexController extends Controller
             //重新生成预支付生成订单
             $result = $app->order->unify($order_config);
 
-            return $this->wechat->pay_config();
             if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
                 $prepayId = $result['prepay_id'];
 
