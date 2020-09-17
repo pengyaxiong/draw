@@ -1320,7 +1320,7 @@ class IndexController extends Controller
             //重新生成预支付生成订单
             $result = $app->order->unify($order_config);
 
-            return $app;
+            return $this->wechat->pay_config();
             if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
                 $prepayId = $result['prepay_id'];
 
