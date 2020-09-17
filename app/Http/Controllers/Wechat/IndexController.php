@@ -297,9 +297,9 @@ class IndexController extends Controller
             $query->where('product_id', $request->product_id);
         };
         if ($request->has('new') and $request->new != '') {
-            $comments=Comment::where($where)->orderby('created_at','desc')->paginate($request->total);
+            $comments=Comment::with('customer')->where($where)->orderby('created_at','desc')->paginate($request->total);
         }else{
-            $comments=Comment::where($where)->paginate($request->total);
+            $comments=Comment::with('customer')->where($where)->paginate($request->total);
         }
 
         $page = isset($page) ? $request['page'] : 1;
