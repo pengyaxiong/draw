@@ -780,7 +780,7 @@ class IndexController extends Controller
                     break;
             }
         };
-        $orders = Order::with('order_products.product')->where($where)->orderby('created_at', 'desc')->paginate($request->total);
+        $orders = Order::with(['order_products.product','address'])->where($where)->orderby('created_at', 'desc')->paginate($request->total);
 
         $page = isset($page) ? $request['page'] : 1;
         $orders = $orders->appends(array(
