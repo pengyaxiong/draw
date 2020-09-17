@@ -1320,7 +1320,7 @@ class IndexController extends Controller
             //重新生成预支付生成订单
             $result = $app->order->unify($order_config);
 
-            return $result;
+            return $app;
             if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
                 $prepayId = $result['prepay_id'];
 
