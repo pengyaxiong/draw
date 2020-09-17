@@ -24,9 +24,11 @@
       <file leaf-file-name="IndexController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="498">
-              <caret line="1338" column="0" lean-forward="true" selection-start-line="1338" selection-start-column="0" selection-end-line="1338" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="671">
+              <caret line="1272" column="48" lean-forward="true" selection-start-line="1272" selection-start-column="48" selection-end-line="1272" selection-end-column="48" />
+              <folding>
+                <element signature="e#39522#41162#0#PHP" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -54,7 +56,7 @@
       <file leaf-file-name="OrderController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="288">
+            <state relative-caret-position="666">
               <caret line="96" column="49" lean-forward="false" selection-start-line="96" selection-start-column="49" selection-end-line="96" selection-end-column="49" />
               <folding>
                 <marker date="1600066997927" expanded="true" signature="2378:2546" ph="..." />
@@ -95,8 +97,8 @@
       <find>product(</find>
       <find>add_cart</find>
       <find>comment</find>
-      <find>order(</find>
       <find>order_products</find>
+      <find>order(</find>
       <find>order_products()-&gt;create</find>
     </findStrings>
     <replaceStrings>
@@ -424,12 +426,12 @@
       <workItem from="1600066562380" duration="768000" />
       <workItem from="1600228379322" duration="1011000" />
       <workItem from="1600239411452" duration="9873000" />
-      <workItem from="1600303746950" duration="4066000" />
+      <workItem from="1600303746950" duration="4439000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="168675000" />
+    <option name="totallyTimeSpent" value="169048000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -649,14 +651,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Response/Helper.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="51" column="23" lean-forward="false" selection-start-line="51" selection-start-column="23" selection-end-line="51" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Models/Customer.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -815,17 +809,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="96" column="49" lean-forward="false" selection-start-line="96" selection-start-column="49" selection-end-line="96" selection-end-column="49" />
-          <folding>
-            <marker date="1600066997927" expanded="true" signature="2378:2546" ph="..." />
-            <marker date="1600066997927" expanded="true" signature="2474:2522" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Models/Shop/Order.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
@@ -834,11 +817,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="666">
+          <caret line="96" column="49" lean-forward="false" selection-start-line="96" selection-start-column="49" selection-end-line="96" selection-end-column="49" />
+          <folding>
+            <marker date="1600066997927" expanded="true" signature="2378:2546" ph="..." />
+            <marker date="1600066997927" expanded="true" signature="2474:2522" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Response/Helper.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="24" column="23" lean-forward="false" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="1338" column="0" lean-forward="true" selection-start-line="1338" selection-start-column="0" selection-end-line="1338" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="671">
+          <caret line="1272" column="48" lean-forward="true" selection-start-line="1272" selection-start-column="48" selection-end-line="1272" selection-end-column="48" />
+          <folding>
+            <element signature="e#39522#41162#0#PHP" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

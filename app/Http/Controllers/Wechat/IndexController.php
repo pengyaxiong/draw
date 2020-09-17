@@ -780,7 +780,7 @@ class IndexController extends Controller
                     break;
             }
         };
-        $orders = Order::with('order_products')->where($where)->orderby('created_at', 'desc')->paginate($request->total);
+        $orders = Order::with('order_products.product')->where($where)->orderby('created_at', 'desc')->paginate($request->total);
 
         $page = isset($page) ? $request['page'] : 1;
         $orders = $orders->appends(array(
@@ -1269,7 +1269,8 @@ class IndexController extends Controller
             }
             $result = Order::with('order_products.product', 'address')->find($order->id);
         }
-        return $this->array($result);
+
+        return $this->array(['order'=>$result]);
 
     }
 
