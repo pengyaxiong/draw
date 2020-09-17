@@ -24,10 +24,10 @@
       <file leaf-file-name="IndexController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-9246">
-              <caret line="819" column="45" lean-forward="false" selection-start-line="819" selection-start-column="45" selection-end-line="819" selection-end-column="45" />
+            <state relative-caret-position="477">
+              <caret line="823" column="5" lean-forward="true" selection-start-line="823" selection-start-column="5" selection-end-line="823" selection-end-column="5" />
               <folding>
-                <element signature="e#39537#41177#0#PHP" expanded="false" />
+                <element signature="e#39545#41185#0#PHP" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -36,18 +36,8 @@
       <file leaf-file-name="WechatConfigHandler.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Handlers/WechatConfigHandler.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="47" column="30" lean-forward="false" selection-start-line="47" selection-start-column="20" selection-end-line="47" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Order.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Models/Shop/Order.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="462">
-              <caret line="23" column="34" lean-forward="false" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="34" />
+            <state relative-caret-position="508">
+              <caret line="64" column="5" lean-forward="true" selection-start-line="64" selection-start-column="5" selection-end-line="64" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -80,7 +70,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Product</find>
       <find>type</find>
       <find>between</find>
       <find>stock</find>
@@ -107,9 +96,10 @@
       <find>add_cart</find>
       <find>comment</find>
       <find>order_products</find>
-      <find>order(</find>
       <find>order_products()-&gt;create</find>
       <find>checkout</find>
+      <find>order(</find>
+      <find>order_info</find>
     </findStrings>
     <replaceStrings>
       <replace>images</replace>
@@ -437,12 +427,12 @@
       <workItem from="1600066562380" duration="768000" />
       <workItem from="1600228379322" duration="1011000" />
       <workItem from="1600239411452" duration="9873000" />
-      <workItem from="1600303746950" duration="6264000" />
+      <workItem from="1600303746950" duration="7891000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="170873000" />
+    <option name="totallyTimeSpent" value="172500000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -791,17 +781,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="666">
-          <caret line="96" column="49" lean-forward="false" selection-start-line="96" selection-start-column="49" selection-end-line="96" selection-end-column="49" />
-          <folding>
-            <marker date="1600066997927" expanded="true" signature="2378:2546" ph="..." />
-            <marker date="1600066997927" expanded="true" signature="2474:2522" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/composer.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -818,26 +797,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Models/Shop/Order.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="23" column="34" lean-forward="false" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Admin/routes.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="371">
           <caret line="29" column="36" lean-forward="false" selection-start-line="29" selection-start-column="36" selection-end-line="29" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Handlers/WechatConfigHandler.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="47" column="30" lean-forward="false" selection-start-line="47" selection-start-column="20" selection-end-line="47" selection-end-column="30" />
           <folding />
         </state>
       </provider>
@@ -850,12 +813,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/Handlers/WechatConfigHandler.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="508">
+          <caret line="64" column="5" lean-forward="true" selection-start-line="64" selection-start-column="5" selection-end-line="64" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="666">
+          <caret line="96" column="49" lean-forward="false" selection-start-line="96" selection-start-column="49" selection-end-line="96" selection-end-column="49" />
+          <folding>
+            <marker date="1600066997927" expanded="true" signature="2378:2546" ph="..." />
+            <marker date="1600066997927" expanded="true" signature="2474:2522" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Models/Shop/Order.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="6" lean-forward="false" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-9246">
-          <caret line="819" column="45" lean-forward="false" selection-start-line="819" selection-start-column="45" selection-end-line="819" selection-end-column="45" />
+        <state relative-caret-position="477">
+          <caret line="823" column="5" lean-forward="true" selection-start-line="823" selection-start-column="5" selection-end-line="823" selection-end-column="5" />
           <folding>
-            <element signature="e#39537#41177#0#PHP" expanded="false" />
+            <element signature="e#39545#41185#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>
