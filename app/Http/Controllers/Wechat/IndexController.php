@@ -52,6 +52,11 @@ class IndexController extends Controller
         $customer = Customer::where('openid', $openid)->first();
 
         if ($customer) {
+
+            $register_url = 'https://' . $_SERVER['SERVER_NAME'] .'/code?code=' . $customer->code;
+
+            QrCode::encoding('UTF-8')->format('png')->size(500)->generate($register_url, public_path('qrcodes/' . $openid . '.png'));
+
             $customer->update([
                 'openid' => $openid,
                 'headimgurl' => $request->headimgurl,
@@ -64,7 +69,7 @@ class IndexController extends Controller
 
             $invitation_code = substr($code, 0, 4) . substr($openid, 0, 2);
 
-            $register_url = 'pages/AuthLogin/AuthLogin?openid' . $openid;
+            $register_url = 'https://' . $_SERVER['SERVER_NAME'] .'/code?code=' . $invitation_code;
 
             QrCode::encoding('UTF-8')->format('png')->size(500)->generate($register_url, public_path('qrcodes/' . $openid . '.png'));
 
@@ -934,13 +939,18 @@ class IndexController extends Controller
         }
         $customer = Customer::where('openid', $openid)->first();
 
-
         $code = $request->code;
         $customer_id = $customer->id;
         $customer = Customer::find($customer_id);
 
         $parent = Customer::where('code', $code)->first();
+
+        if($customer->parent_id>0){
+            return $this->error(500, '你已经绑定过');
+        }
+
         if (!empty($parent)) {
+
             $customer->parent_id = $parent->id;
             $customer->save();
             return $this->null();
