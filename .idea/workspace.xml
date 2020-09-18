@@ -14,8 +14,8 @@
       <file leaf-file-name="api.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/api.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="735">
-              <caret line="144" column="26" lean-forward="false" selection-start-line="144" selection-start-column="16" selection-end-line="144" selection-end-column="26" />
+            <state relative-caret-position="392">
+              <caret line="132" column="20" lean-forward="false" selection-start-line="132" selection-start-column="16" selection-end-line="132" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -24,20 +24,40 @@
       <file leaf-file-name="IndexController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="561">
-              <caret line="782" column="64" lean-forward="false" selection-start-line="782" selection-start-column="64" selection-end-line="782" selection-end-column="64" />
+            <state relative-caret-position="425">
+              <caret line="922" column="11" lean-forward="true" selection-start-line="922" selection-start-column="11" selection-end-line="922" selection-end-column="11" />
               <folding>
-                <element signature="e#39561#41201#0#PHP" expanded="false" />
+                <element signature="e#18797#19021#0#PHP" expanded="false" />
+                <element signature="e#19389#19840#0#PHP" expanded="false" />
+                <element signature="e#19846#22849#0#PHP" expanded="false" />
+                <element signature="e#24596#25952#0#PHP" expanded="false" />
+                <element signature="e#25958#26436#0#PHP" expanded="false" />
+                <element signature="e#26442#26853#0#PHP" expanded="false" />
+                <element signature="e#26859#27673#0#PHP" expanded="false" />
+                <element signature="e#27705#28523#0#PHP" expanded="false" />
+                <element signature="e#29734#30357#0#PHP" expanded="false" />
+                <element signature="e#31689#32229#0#PHP" expanded="false" />
+                <element signature="e#32235#33249#0#PHP" expanded="false" />
+                <element signature="e#33255#33717#0#PHP" expanded="false" />
+                <element signature="e#33723#34253#0#PHP" expanded="false" />
+                <element signature="e#34259#34688#0#PHP" expanded="false" />
+                <element signature="e#34694#35067#0#PHP" expanded="false" />
+                <element signature="e#35209#36360#0#PHP" expanded="false" />
+                <element signature="e#36527#38000#0#PHP" expanded="false" />
+                <element signature="e#38105#39178#0#PHP" expanded="false" />
+                <element signature="e#39184#42482#0#PHP" expanded="false" />
+                <element signature="e#40780#42423#0#PHP" expanded="false" />
+                <element signature="e#42488#46648#0#PHP" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WechatConfigHandler.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/Handlers/WechatConfigHandler.php">
+      <file leaf-file-name="WithdrawController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/WithdrawController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="508">
-              <caret line="64" column="5" lean-forward="true" selection-start-line="64" selection-start-column="5" selection-end-line="64" selection-end-column="5" />
+            <state relative-caret-position="161">
+              <caret line="111" column="35" lean-forward="true" selection-start-line="111" selection-start-column="35" selection-end-line="111" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -46,7 +66,7 @@
       <file leaf-file-name="routes.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Admin/routes.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="371">
+            <state relative-caret-position="609">
               <caret line="29" column="36" lean-forward="false" selection-start-line="29" selection-start-column="36" selection-end-line="29" selection-end-column="36" />
               <folding />
             </state>
@@ -56,7 +76,7 @@
       <file leaf-file-name="OrderController.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="666">
+            <state relative-caret-position="1680">
               <caret line="96" column="49" lean-forward="false" selection-start-line="96" selection-start-column="49" selection-end-line="96" selection-end-column="49" />
               <folding>
                 <marker date="1600066997927" expanded="true" signature="2378:2546" ph="..." />
@@ -70,18 +90,11 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>type</find>
-      <find>between</find>
-      <find>stock</find>
-      <find>about</find>
       <find>do_draw</find>
       <find>activity()</find>
       <find>problem_category</find>
       <find>upload_img</find>
       <find>group</find>
-      <find>do_withdraw</find>
-      <find>money(</find>
-      <find>money</find>
       <find>code</find>
       <find>code(</find>
       <find>osJCDuBE6RgIJV8lv1dDq8K4B5eU</find>
@@ -100,6 +113,13 @@
       <find>checkout</find>
       <find>order(</find>
       <find>order_info</find>
+      <find>do_withdraw</find>
+      <find>money(</find>
+      <find>coin(</find>
+      <find>购买商品反积分</find>
+      <find>pay_type</find>
+      <find>Order</find>
+      <find>money</find>
     </findStrings>
     <replaceStrings>
       <replace>images</replace>
@@ -201,8 +221,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -354,6 +372,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -427,25 +447,26 @@
       <workItem from="1600066562380" duration="768000" />
       <workItem from="1600228379322" duration="1011000" />
       <workItem from="1600239411452" duration="9873000" />
-      <workItem from="1600303746950" duration="9281000" />
+      <workItem from="1600303746950" duration="9879000" />
+      <workItem from="1600389558235" duration="5379000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="173890000" />
+    <option name="totallyTimeSpent" value="179867000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17604166" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16822916" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -657,13 +678,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Models/Shop/Withdraw.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="6" lean-forward="false" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Admin/Actions/Post/OrderOver.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -689,13 +703,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1218">
           <caret line="64" column="13" lean-forward="false" selection-start-line="64" selection-start-column="13" selection-end-line="64" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/WithdrawController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2814">
-          <caret line="140" column="36" lean-forward="false" selection-start-line="140" selection-start-column="36" selection-end-line="140" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -725,7 +732,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
           <caret line="7" column="6" lean-forward="false" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -733,27 +739,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="403">
           <caret line="199" column="14" lean-forward="true" selection-start-line="199" selection-start-column="14" selection-end-line="199" selection-end-column="14" />
-          <folding>
-            <marker date="1600327975615" expanded="true" signature="1077:1151" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="1179:1202" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="1264:1287" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="1316:1346" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="1378:1402" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="1581:1609" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="1696:1716" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="1751:1775" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="1806:1832" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="1870:1926" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="2007:2024" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="2577:2602" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="2681:2693" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="2799:2814" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="2905:2920" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="2997:3009" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="3838:3853" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="4496:4511" ph="..." />
-            <marker date="1600327975615" expanded="true" signature="5319:5351" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -785,7 +770,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -793,37 +777,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="10" column="29" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="29" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Admin/routes.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
+        <state relative-caret-position="609">
           <caret line="29" column="36" lean-forward="false" selection-start-line="29" selection-start-column="36" selection-end-line="29" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/api.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="735">
-          <caret line="144" column="26" lean-forward="false" selection-start-line="144" selection-start-column="16" selection-end-line="144" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Handlers/WechatConfigHandler.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="64" column="5" lean-forward="true" selection-start-line="64" selection-start-column="5" selection-end-line="64" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/OrderController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="666">
+        <state relative-caret-position="1680">
           <caret line="96" column="49" lean-forward="false" selection-start-line="96" selection-start-column="49" selection-end-line="96" selection-end-column="49" />
           <folding>
             <marker date="1600066997927" expanded="true" signature="2378:2546" ph="..." />
@@ -840,12 +807,64 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/Handlers/WechatConfigHandler.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="508">
+          <caret line="64" column="5" lean-forward="false" selection-start-line="64" selection-start-column="5" selection-end-line="64" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/api.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="392">
+          <caret line="132" column="20" lean-forward="false" selection-start-line="132" selection-start-column="16" selection-end-line="132" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Models/Shop/Withdraw.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="6" lean-forward="false" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Admin/Controllers/Shop/WithdrawController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="111" column="35" lean-forward="true" selection-start-line="111" selection-start-column="35" selection-end-line="111" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="782" column="64" lean-forward="false" selection-start-line="782" selection-start-column="64" selection-end-line="782" selection-end-column="64" />
+        <state relative-caret-position="425">
+          <caret line="922" column="11" lean-forward="true" selection-start-line="922" selection-start-column="11" selection-end-line="922" selection-end-column="11" />
           <folding>
-            <element signature="e#39561#41201#0#PHP" expanded="false" />
+            <element signature="e#18797#19021#0#PHP" expanded="false" />
+            <element signature="e#19389#19840#0#PHP" expanded="false" />
+            <element signature="e#19846#22849#0#PHP" expanded="false" />
+            <element signature="e#24596#25952#0#PHP" expanded="false" />
+            <element signature="e#25958#26436#0#PHP" expanded="false" />
+            <element signature="e#26442#26853#0#PHP" expanded="false" />
+            <element signature="e#26859#27673#0#PHP" expanded="false" />
+            <element signature="e#27705#28523#0#PHP" expanded="false" />
+            <element signature="e#29734#30357#0#PHP" expanded="false" />
+            <element signature="e#31689#32229#0#PHP" expanded="false" />
+            <element signature="e#32235#33249#0#PHP" expanded="false" />
+            <element signature="e#33255#33717#0#PHP" expanded="false" />
+            <element signature="e#33723#34253#0#PHP" expanded="false" />
+            <element signature="e#34259#34688#0#PHP" expanded="false" />
+            <element signature="e#34694#35067#0#PHP" expanded="false" />
+            <element signature="e#35209#36360#0#PHP" expanded="false" />
+            <element signature="e#36527#38000#0#PHP" expanded="false" />
+            <element signature="e#38105#39178#0#PHP" expanded="false" />
+            <element signature="e#39184#42482#0#PHP" expanded="false" />
+            <element signature="e#40780#42423#0#PHP" expanded="false" />
+            <element signature="e#42488#46648#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>

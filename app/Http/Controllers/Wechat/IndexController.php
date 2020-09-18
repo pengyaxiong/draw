@@ -286,10 +286,10 @@ class IndexController extends Controller
         //多条件查找
         $where = function ($query) use ($request) {
             if ($request->has('good') and $request->good != '') {
-                $query->where('grade', '>=',3);
+                $query->where('grade', '>=', 3);
             }
             if ($request->has('bad') and $request->bad != '') {
-                $query->where('grade', '<',3);
+                $query->where('grade', '<', 3);
             }
             if ($request->has('photo') and $request->photo != '') {
                 $query->where('images', true);
@@ -297,9 +297,9 @@ class IndexController extends Controller
             $query->where('product_id', $request->product_id);
         };
         if ($request->has('new') and $request->new != '') {
-            $comments=Comment::with('customer')->where($where)->orderby('created_at','desc')->paginate($request->total);
-        }else{
-            $comments=Comment::with('customer')->where($where)->paginate($request->total);
+            $comments = Comment::with('customer')->where($where)->orderby('created_at', 'desc')->paginate($request->total);
+        } else {
+            $comments = Comment::with('customer')->where($where)->paginate($request->total);
         }
 
         $page = isset($page) ? $request['page'] : 1;
@@ -780,7 +780,7 @@ class IndexController extends Controller
                     break;
             }
         };
-        $orders = Order::with(['order_products.product','address'])->where($where)->orderby('created_at', 'desc')->paginate($request->total);
+        $orders = Order::with(['order_products.product', 'address'])->where($where)->orderby('created_at', 'desc')->paginate($request->total);
 
         $page = isset($page) ? $request['page'] : 1;
         $orders = $orders->appends(array(
@@ -817,7 +817,7 @@ class IndexController extends Controller
         }
         $customer = Customer::where('openid', $openid)->first();
 
-        $order = Order::with(['order_products.product.category','address'])->where('customer_id', $customer->id)->find($id);
+        $order = Order::with(['order_products.product.category', 'address'])->where('customer_id', $customer->id)->find($id);
 
 
         return $this->array(['order' => $order]);
@@ -879,6 +879,50 @@ class IndexController extends Controller
         ));
 
         return $this->array(['list' => $customers]);
+    }
+
+    //余额记录
+    public function money(Request $request)
+    {
+        $openid = $request->openid;
+        if (!$openid) {
+            return $this->error(2);
+        }
+
+        $customer = Customer::where('openid', $openid)->first();
+
+        $coins = Coin::where('log_name', 'money')->where('subject_id', $customer->id)->paginate($request->total);
+
+        foreach ($coins as $key => $coin) {
+            $coins[$key]['customer'] = Customer::find($coin['causer_id']);
+        }
+        $page = isset($page) ? $request['page'] : 1;
+
+        $coins = $coins->appends(array(
+            'page' => $page,
+        ));
+
+        return $this->array(['list' => $coins]);
+    }
+
+    //提现记录
+    public function withdraw(Request $request)
+    {
+        $openid = $request->openid;
+        if (!$openid) {
+            return $this->error(2);
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $withdraws = Withdraw::where('customer_id',$customer->id)->paginate($request->total);
+
+        $page = isset($page) ? $request['page'] : 1;
+
+        $withdraws = $withdraws->appends(array(
+            'page' => $page,
+        ));
+
+        return $this->array(['list' => $withdraws]);
     }
 
     public function code(Request $request)
@@ -1222,8 +1266,8 @@ class IndexController extends Controller
                 'name' => $address->name
             ]);
 
-            $order->order_products()->create(['product_id' => $product_id, 'price' => $product->price,'num' => $request->num, 'sku' => $request->sku]);
-            $result = Order::with('order_products.product', 'address')->find($order->id);
+            $order->order_products()->create(['product_id' => $product_id, 'price' => $product->price, 'num' => $request->num, 'sku' => $request->sku]);
+            $result = Order::with(['order_products.product', 'address'])->find($order->id);
         }
 
         if ($cart_id) {
@@ -1262,15 +1306,15 @@ class IndexController extends Controller
                 $product->stock -= $cart->num;
                 $product->save();
 
-                $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'price' => $product->price,'num' => $cart->num, 'sku' => $cart->sku]);
+                $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'price' => $product->price, 'num' => $cart->num, 'sku' => $cart->sku]);
                 if ($result_) {
                     Cart::destroy($cart->id);
                 }
             }
-            $result = Order::with('order_products.product', 'address')->find($order->id);
+            $result = Order::with(['order_products.product', 'address'])->find($order->id);
         }
 
-        return $this->array(['order'=>$result]);
+        return $this->array(['order' => $result]);
 
     }
 
@@ -1370,7 +1414,7 @@ class IndexController extends Controller
                 ]);
 
                 foreach ($carts as $cart) {
-                    $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'price' => $cart->product->price,'sku' => $cart->sku, 'num' => $cart->num]);
+                    $result_ = $order->order_products()->create(['product_id' => $cart->product_id, 'price' => $cart->product->price, 'sku' => $cart->sku, 'num' => $cart->num]);
                     if ($result_) {
                         Cart::destroy($cart->id);
                     }
@@ -1435,15 +1479,17 @@ class IndexController extends Controller
             'order_id' => $request->order_id,
             'product_id' => $request->product_id,
             'customer_id' => $customer->id,
-            'images' => is_array($request->images)?$request->images:[],
+            'images' => is_array($request->images) ? $request->images : [],
             'grade' => $request->grade,
             'content' => $request['content'],
         ]);
 
-        $order = Order::find($request->order_id);
-
+        $order = Order::with('order_products.product')->find($request->order_id);
         $pay_type = $order->pay_type;
         if ($pay_type == 1) {
+            $order_product = $order->order_products->first();
+            $product_name = $order_product->product->name;
+
             $total_price = $order->total_price;
             $commission_rate = Config::first()->commission_rate;
             $goods_rate = Config::first()->goods_rate;
@@ -1458,14 +1504,14 @@ class IndexController extends Controller
                 ->log('购买商品反积分');
 
             $parent = Customer::find($customer->parent_id);
-            if (!empty($parent)) {
+            if (!empty($parent) && $total_price > 0) {
                 $num = $total_price * $commission_rate;
                 $parent->money += $num;
                 $parent->save();
                 activity()->inLog('money')
-                    ->performedOn($customer)
-                    ->causedBy($order)
-                    ->withProperties(['type' => '+', 'num' => $num])
+                    ->performedOn($parent)
+                    ->causedBy($customer)
+                    ->withProperties(['type' => '+', 'num' => $num, 'product_name' => $product_name])
                     ->log('下级' . $customer->nickname . '购买商品返佣');
             }
 
