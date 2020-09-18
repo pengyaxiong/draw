@@ -71,7 +71,7 @@ class IndexController extends Controller
             $customer = Customer::create([
                 'openid' => $openid,
                 'code' => $invitation_code,
-                'code_image' => 'https://' . $_SERVER['SERVER_NAME'] . '/storage/qrcodes/' . $openid . '.png',
+                'code_image' => 'https://' . $_SERVER['SERVER_NAME'] . '/public/storage/qrcodes/' . $openid . '.png',
                 'headimgurl' => $request->headimgurl,
                 'nickname' => $request->nickname,
                 'tel' => $request->tel,
