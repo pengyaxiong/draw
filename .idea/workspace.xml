@@ -24,29 +24,29 @@
       <file leaf-file-name="IndexController.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="538">
-              <caret line="75" column="49" lean-forward="true" selection-start-line="75" selection-start-column="49" selection-end-line="75" selection-end-column="49" />
+            <state relative-caret-position="496">
+              <caret line="73" column="85" lean-forward="false" selection-start-line="73" selection-start-column="85" selection-end-line="73" selection-end-column="85" />
               <folding>
-                <element signature="e#18804#19028#0#PHP" expanded="false" />
-                <element signature="e#19396#19847#0#PHP" expanded="false" />
-                <element signature="e#19853#22856#0#PHP" expanded="false" />
-                <element signature="e#24603#25959#0#PHP" expanded="false" />
-                <element signature="e#25965#26443#0#PHP" expanded="false" />
-                <element signature="e#26449#26860#0#PHP" expanded="false" />
-                <element signature="e#26866#27680#0#PHP" expanded="false" />
-                <element signature="e#27712#28530#0#PHP" expanded="false" />
-                <element signature="e#31696#32236#0#PHP" expanded="false" />
-                <element signature="e#32242#33256#0#PHP" expanded="false" />
-                <element signature="e#33262#33724#0#PHP" expanded="false" />
-                <element signature="e#33730#34260#0#PHP" expanded="false" />
-                <element signature="e#34266#34695#0#PHP" expanded="false" />
-                <element signature="e#34701#35074#0#PHP" expanded="false" />
-                <element signature="e#35216#36367#0#PHP" expanded="false" />
-                <element signature="e#36534#38007#0#PHP" expanded="false" />
-                <element signature="e#38112#39185#0#PHP" expanded="false" />
-                <element signature="e#39191#42489#0#PHP" expanded="false" />
-                <element signature="e#40787#42430#0#PHP" expanded="false" />
-                <element signature="e#42495#46655#0#PHP" expanded="false" />
+                <element signature="e#18788#19012#0#PHP" expanded="false" />
+                <element signature="e#19380#19831#0#PHP" expanded="false" />
+                <element signature="e#19837#22840#0#PHP" expanded="false" />
+                <element signature="e#24587#25943#0#PHP" expanded="false" />
+                <element signature="e#25949#26427#0#PHP" expanded="false" />
+                <element signature="e#26433#26844#0#PHP" expanded="false" />
+                <element signature="e#26850#27664#0#PHP" expanded="false" />
+                <element signature="e#27696#28514#0#PHP" expanded="false" />
+                <element signature="e#31680#32220#0#PHP" expanded="false" />
+                <element signature="e#32226#33240#0#PHP" expanded="false" />
+                <element signature="e#33246#33708#0#PHP" expanded="false" />
+                <element signature="e#33714#34244#0#PHP" expanded="false" />
+                <element signature="e#34250#34679#0#PHP" expanded="false" />
+                <element signature="e#34685#35058#0#PHP" expanded="false" />
+                <element signature="e#35200#36351#0#PHP" expanded="false" />
+                <element signature="e#36518#37991#0#PHP" expanded="false" />
+                <element signature="e#38096#39169#0#PHP" expanded="false" />
+                <element signature="e#39175#42473#0#PHP" expanded="false" />
+                <element signature="e#40771#42414#0#PHP" expanded="false" />
+                <element signature="e#42479#46639#0#PHP" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -95,7 +95,6 @@
       <find>upload_img</find>
       <find>group</find>
       <find>code</find>
-      <find>code(</find>
       <find>osJCDuBE6RgIJV8lv1dDq8K4B5eU</find>
       <find>exchange</find>
       <find>add_order</find>
@@ -119,6 +118,7 @@
       <find>pay_type</find>
       <find>Order</find>
       <find>money</find>
+      <find>code(</find>
     </findStrings>
     <replaceStrings>
       <replace>images</replace>
@@ -339,6 +339,11 @@
             <path>
               <item name="draw" type="b2602c69:ProjectViewProjectNode" />
               <item name="draw" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="config" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="draw" type="b2602c69:ProjectViewProjectNode" />
+              <item name="draw" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="resources" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
@@ -447,12 +452,12 @@
       <workItem from="1600228379322" duration="1011000" />
       <workItem from="1600239411452" duration="9873000" />
       <workItem from="1600303746950" duration="9879000" />
-      <workItem from="1600389558235" duration="9015000" />
+      <workItem from="1600389558235" duration="9279000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="183503000" />
+    <option name="totallyTimeSpent" value="183767000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1056" extended-state="6" />
@@ -492,27 +497,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/vendor/encore/laravel-admin/src/Actions/Action.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="39" column="15" lean-forward="false" selection-start-line="39" selection-start-column="15" selection-end-line="39" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/vendor/laravel-admin/sweetalert2/dist/sweetalert2.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="0" column="13850" lean-forward="false" selection-start-line="0" selection-start-column="13840" selection-end-line="0" selection-end-column="13850" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/encore/laravel-admin/resources/assets/sweetalert2/dist/sweetalert2.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="0" column="31176" lean-forward="false" selection-start-line="0" selection-start-column="31176" selection-end-line="0" selection-end-column="31176" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/encore/laravel-admin/src/Form.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="600">
@@ -838,31 +822,55 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="873" column="13" lean-forward="false" selection-start-line="873" selection-start-column="13" selection-end-line="873" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/filesystems.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="371">
+          <caret line="50" column="15" lean-forward="false" selection-start-line="50" selection-start-column="9" selection-end-line="50" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/app.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3871">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/Wechat/IndexController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="538">
-          <caret line="75" column="49" lean-forward="true" selection-start-line="75" selection-start-column="49" selection-end-line="75" selection-end-column="49" />
+        <state relative-caret-position="496">
+          <caret line="73" column="85" lean-forward="false" selection-start-line="73" selection-start-column="85" selection-end-line="73" selection-end-column="85" />
           <folding>
-            <element signature="e#18804#19028#0#PHP" expanded="false" />
-            <element signature="e#19396#19847#0#PHP" expanded="false" />
-            <element signature="e#19853#22856#0#PHP" expanded="false" />
-            <element signature="e#24603#25959#0#PHP" expanded="false" />
-            <element signature="e#25965#26443#0#PHP" expanded="false" />
-            <element signature="e#26449#26860#0#PHP" expanded="false" />
-            <element signature="e#26866#27680#0#PHP" expanded="false" />
-            <element signature="e#27712#28530#0#PHP" expanded="false" />
-            <element signature="e#31696#32236#0#PHP" expanded="false" />
-            <element signature="e#32242#33256#0#PHP" expanded="false" />
-            <element signature="e#33262#33724#0#PHP" expanded="false" />
-            <element signature="e#33730#34260#0#PHP" expanded="false" />
-            <element signature="e#34266#34695#0#PHP" expanded="false" />
-            <element signature="e#34701#35074#0#PHP" expanded="false" />
-            <element signature="e#35216#36367#0#PHP" expanded="false" />
-            <element signature="e#36534#38007#0#PHP" expanded="false" />
-            <element signature="e#38112#39185#0#PHP" expanded="false" />
-            <element signature="e#39191#42489#0#PHP" expanded="false" />
-            <element signature="e#40787#42430#0#PHP" expanded="false" />
-            <element signature="e#42495#46655#0#PHP" expanded="false" />
+            <element signature="e#18788#19012#0#PHP" expanded="false" />
+            <element signature="e#19380#19831#0#PHP" expanded="false" />
+            <element signature="e#19837#22840#0#PHP" expanded="false" />
+            <element signature="e#24587#25943#0#PHP" expanded="false" />
+            <element signature="e#25949#26427#0#PHP" expanded="false" />
+            <element signature="e#26433#26844#0#PHP" expanded="false" />
+            <element signature="e#26850#27664#0#PHP" expanded="false" />
+            <element signature="e#27696#28514#0#PHP" expanded="false" />
+            <element signature="e#31680#32220#0#PHP" expanded="false" />
+            <element signature="e#32226#33240#0#PHP" expanded="false" />
+            <element signature="e#33246#33708#0#PHP" expanded="false" />
+            <element signature="e#33714#34244#0#PHP" expanded="false" />
+            <element signature="e#34250#34679#0#PHP" expanded="false" />
+            <element signature="e#34685#35058#0#PHP" expanded="false" />
+            <element signature="e#35200#36351#0#PHP" expanded="false" />
+            <element signature="e#36518#37991#0#PHP" expanded="false" />
+            <element signature="e#38096#39169#0#PHP" expanded="false" />
+            <element signature="e#39175#42473#0#PHP" expanded="false" />
+            <element signature="e#40771#42414#0#PHP" expanded="false" />
+            <element signature="e#42479#46639#0#PHP" expanded="false" />
           </folding>
         </state>
       </provider>

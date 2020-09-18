@@ -66,12 +66,12 @@ class IndexController extends Controller
 
             $register_url = 'pages/AuthLogin/AuthLogin?openid' . $openid;
 
-            QrCode::encoding('UTF-8')->format('png')->size(500)->generate($register_url, storage_path('qrcodes/' . $openid . '.png'));
+            QrCode::encoding('UTF-8')->format('png')->size(500)->generate($register_url, public_path('qrcodes/' . $openid . '.png'));
 
             $customer = Customer::create([
                 'openid' => $openid,
                 'code' => $invitation_code,
-                'code_image' => 'https://' . $_SERVER['SERVER_NAME'] . '/public/storage/qrcodes/' . $openid . '.png',
+                'code_image' => 'https://' . $_SERVER['SERVER_NAME'] . '/qrcodes/' . $openid . '.png',
                 'headimgurl' => $request->headimgurl,
                 'nickname' => $request->nickname,
                 'tel' => $request->tel,
