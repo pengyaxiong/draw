@@ -1486,16 +1486,21 @@ class IndexController extends Controller
         }
         $customer = Customer::where('openid', $openid)->first();
 
-        Comment::create([
-            'order_id' => $request->order_id,
-            'product_id' => $request->product_id,
-            'customer_id' => $customer->id,
-            'images' => is_array($request->images) ? $request->images : [],
-            'grade' => $request->grade,
-            'content' => $request['content'],
-        ]);
-
         $order = Order::with('order_products.product')->find($request->order_id);
+
+        foreach ($order->order_products as $order_products){
+
+            Comment::create([
+                'order_id' => $request->order_id,
+                'product_id' => $order_products->product_id,
+                'customer_id' => $customer->id,
+                'images' => is_array($request->images) ? $request->images : [],
+                'grade' => $request->grade,
+                'content' => $request['content'],
+            ]);
+        }
+
+
         $pay_type = $order->pay_type;
         if ($pay_type == 1) {
             $order_product = $order->order_products->first();
@@ -1527,7 +1532,7 @@ class IndexController extends Controller
             }
 
         }
-        OrderProduct::where('order_id',$request->order_id)->where('product_id',$request->product_id)->update(['is_comment'=>1]);
+//        OrderProduct::where('order_id',$request->order_id)->where('product_id',$request->product_id)->update(['is_comment'=>1]);
         $order->status = 5;
         $order->comment_time = date('Y-m-d H:i:s', time());
         $order->finish_time = date('Y-m-d H:i:s', time());
