@@ -131,6 +131,7 @@ Route::group(['namespace' => 'Wechat', 'prefix' => 'wechat', 'as' => 'wechat.'],
     Route::post('default_address', 'IndexController@default_address');
     //我的积分记录
     Route::get('coin', 'IndexController@coin');
+    Route::get('withdraw', 'IndexController@withdraw');
     //每日领取积分
     Route::get('do_coin', 'IndexController@do_coin');
 
