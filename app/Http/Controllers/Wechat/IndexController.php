@@ -15,6 +15,7 @@ use App\Models\Shop\Coin;
 use App\Models\Shop\Comment;
 use App\Models\Shop\Order;
 use App\Models\Shop\OrderAddress;
+use App\Models\Shop\OrderProduct;
 use App\Models\Shop\Product;
 use App\Models\Shop\Withdraw;
 use Illuminate\Http\Request;
@@ -1526,6 +1527,7 @@ class IndexController extends Controller
             }
 
         }
+        OrderProduct::where('order_id',$request->order_id)->where('product_id',$request->product_id)->update(['is_comment'=>1]);
         $order->status = 5;
         $order->comment_time = date('Y-m-d H:i:s', time());
         $order->finish_time = date('Y-m-d H:i:s', time());
