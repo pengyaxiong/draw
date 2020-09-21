@@ -1151,7 +1151,7 @@ class IndexController extends Controller
         ]);
 
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            return $this->error(200, '退款申请请求成功');
+            return $this->error(200, '退款申请请求成功',200);
         }
 
         return $this->error(500, '退款申请请求失败~');
@@ -1173,7 +1173,7 @@ class IndexController extends Controller
             $order = Order::where('order_sn', $reqInfo['out_trade_no'])->first();
 
             if (!$order || $order->status == '6') { // 如果订单不存在 或者 订单已经退过款了
-                return $this->error(200, '退款成功~'); // 告诉微信，我已经处理完了，订单没找到，别再通知我了
+                return $this->error(200, '退款成功~',200); // 告诉微信，我已经处理完了，订单没找到，别再通知我了
             }
             if ($message['return_code'] == 'SUCCESS') {
                 if ($reqInfo['refund_status'] == 'SUCCESS') {
@@ -1190,7 +1190,7 @@ class IndexController extends Controller
                         ->causedBy($customer)
                         ->log("微信退款");
                 }
-                return $this->error(200, '退款成功~'); // 返回 true 告诉微信“我已处理完成”
+                return $this->error(200, '退款成功~',200); // 返回 true 告诉微信“我已处理完成”
                 // 或返回错误原因 $fail('参数格式校验错误');
             } else {
                 return $fail('参数格式校验错误');
