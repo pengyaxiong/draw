@@ -808,7 +808,7 @@ class IndexController extends Controller
 
         $order = Order::where('customer_id', $customer->id)->find($order_id);
         if ($order->status == 3) {
-            $order->status = 5;
+            $order->status = 4;
             $order->save();
         }
 
