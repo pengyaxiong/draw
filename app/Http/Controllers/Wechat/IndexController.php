@@ -54,7 +54,7 @@ class IndexController extends Controller
 
         if ($customer) {
 
-            $register_url = 'https://' . $_SERVER['SERVER_NAME'] .'/code?code=' . $customer->code;
+            $register_url = 'https://' . $_SERVER['SERVER_NAME'] . '/code?code=' . $customer->code;
 
             QrCode::encoding('UTF-8')->format('png')->size(500)->generate($register_url, public_path('qrcodes/' . $openid . '.png'));
 
@@ -70,7 +70,7 @@ class IndexController extends Controller
 
             $invitation_code = substr($code, 0, 4) . substr($openid, 0, 2);
 
-            $register_url = 'https://' . $_SERVER['SERVER_NAME'] .'/code?code=' . $invitation_code;
+            $register_url = 'https://' . $_SERVER['SERVER_NAME'] . '/code?code=' . $invitation_code;
 
             QrCode::encoding('UTF-8')->format('png')->size(500)->generate($register_url, public_path('qrcodes/' . $openid . '.png'));
 
@@ -515,7 +515,7 @@ class IndexController extends Controller
         return $this->null();
     }
 
-
+    //我的积分记录
     public function coin(Request $request)
     {
         $openid = $request->openid;
@@ -524,7 +524,7 @@ class IndexController extends Controller
         }
         $customer = Customer::where('openid', $openid)->first();
 
-        $coins = Coin::where('log_name', 'coin')->where('causer_id', $customer->id)->paginate($request->total);
+        $coins = Coin::wherein('log_name', ['coin','get_coin','share_coin'])->where('causer_id', $customer->id)->paginate($request->total);
         $page = isset($page) ? $request['page'] : 1;
 
         $coins = $coins->appends(array(
@@ -534,40 +534,6 @@ class IndexController extends Controller
         return $this->array(['list' => $coins]);
     }
 
-    public function do_coin(Request $request)
-    {
-        $openid = $request->openid;
-
-        $configs = Config::first();
-        $coin = $configs->coin;
-
-        if (!$openid) {
-            return $this->error(2);
-        }
-        $customer = Customer::where('openid', $openid)->first();
-
-        $is_get = Coin::where('log_name', 'coin')->where('causer_id', $customer->id)->orderby('created_at', 'desc')->first();
-
-        if ($is_get) {
-            $get_time = date('Y-m-d', strtotime($is_get->created_at));
-            $now = date('Y-m-d');
-
-            if ($get_time == $now) {
-
-                return $this->error(3);
-            }
-        }
-
-        activity()->inLog('coin')
-            ->performedOn($customer)
-            ->causedBy($customer)
-            ->withProperties(['type' => '+', 'num' => $coin])
-            ->log('每日签到奖励积分');
-        $customer->coin += $coin;
-        $customer->save();
-
-        return $this->null();
-    }
 
     public function draw()
     {
@@ -920,7 +886,7 @@ class IndexController extends Controller
         }
         $customer = Customer::where('openid', $openid)->first();
 
-        $withdraws = Withdraw::where('customer_id',$customer->id)->paginate($request->total);
+        $withdraws = Withdraw::where('customer_id', $customer->id)->paginate($request->total);
 
         $page = isset($page) ? $request['page'] : 1;
 
@@ -931,6 +897,7 @@ class IndexController extends Controller
         return $this->array(['list' => $withdraws]);
     }
 
+    //邀请用户
     public function code(Request $request)
     {
 
@@ -946,11 +913,22 @@ class IndexController extends Controller
 
         $parent = Customer::where('code', $code)->first();
 
-        if($customer->parent_id>0){
+        if ($customer->parent_id > 0) {
             return $this->error(500, '你已经绑定过');
         }
 
         if (!empty($parent)) {
+            $configs = Config::first();
+            $share_coin = $configs->share_coin;
+
+            activity()->inLog('share_coin')
+                ->performedOn($parent)
+                ->causedBy($parent)
+                ->withProperties(['type' => '+', 'num' => $share_coin])
+                ->log('邀请新用户奖励积分');
+            $parent->coin += $share_coin;
+            $parent->save();
+
 
             $customer->parent_id = $parent->id;
             $customer->save();
@@ -958,6 +936,78 @@ class IndexController extends Controller
         } else {
             return $this->error(500, '邀请码错误！');
         }
+    }
+
+    //每日领取积分
+    public function do_coin(Request $request)
+    {
+        $openid = $request->openid;
+
+        $configs = Config::first();
+        $coin = $configs->coin;
+
+        if (!$openid) {
+            return $this->error(2);
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $is_get = Coin::where('log_name', 'coin')->where('causer_id', $customer->id)->orderby('created_at', 'desc')->first();
+
+        if ($is_get) {
+            $get_time = date('Y-m-d', strtotime($is_get->created_at));
+            $now = date('Y-m-d');
+
+            if ($get_time == $now) {
+
+                return $this->error(3);
+            }
+        }
+
+        activity()->inLog('coin')
+            ->performedOn($customer)
+            ->causedBy($customer)
+            ->withProperties(['type' => '+', 'num' => $coin])
+            ->log('每日签到奖励积分');
+        $customer->coin += $coin;
+        $customer->save();
+
+        return $this->null();
+    }
+
+    //分享就有积分，一天一次
+    public function get_coin(Request $request)
+    {
+        $openid = $request->openid;
+        if (!$openid) {
+            return $this->error(2);
+        }
+        $customer = Customer::where('openid', $openid)->first();
+
+        $configs = Config::first();
+        $coin = $configs->get_coin;
+
+        $is_get = Coin::where('log_name', 'get_coin')->where('causer_id', $customer->id)->orderby('created_at', 'desc')->first();
+
+        if ($is_get) {
+            $get_time = date('Y-m-d', strtotime($is_get->created_at));
+            $now = date('Y-m-d');
+
+            if ($get_time == $now) {
+
+                return $this->error(3);
+            }
+        }
+
+        activity()->inLog('get_coin')
+            ->performedOn($customer)
+            ->causedBy($customer)
+            ->withProperties(['type' => '+', 'num' => $coin])
+            ->log('每日分享奖励积分');
+        $customer->coin += $coin;
+        $customer->save();
+
+        return $this->null();
+
     }
 
     public function do_withdraw(Request $request)
@@ -1151,7 +1201,7 @@ class IndexController extends Controller
         ]);
 
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            return $this->error(200, '退款申请请求成功',200);
+            return $this->error(200, '退款申请请求成功', 200);
         }
 
         return $this->error(500, '退款申请请求失败~');
@@ -1173,7 +1223,7 @@ class IndexController extends Controller
             $order = Order::where('order_sn', $reqInfo['out_trade_no'])->first();
 
             if (!$order || $order->status == '6') { // 如果订单不存在 或者 订单已经退过款了
-                return $this->error(200, '退款成功~',200); // 告诉微信，我已经处理完了，订单没找到，别再通知我了
+                return $this->error(200, '退款成功~', 200); // 告诉微信，我已经处理完了，订单没找到，别再通知我了
             }
             if ($message['return_code'] == 'SUCCESS') {
                 if ($reqInfo['refund_status'] == 'SUCCESS') {
@@ -1190,7 +1240,7 @@ class IndexController extends Controller
                         ->causedBy($customer)
                         ->log("微信退款");
                 }
-                return $this->error(200, '退款成功~',200); // 返回 true 告诉微信“我已处理完成”
+                return $this->error(200, '退款成功~', 200); // 返回 true 告诉微信“我已处理完成”
                 // 或返回错误原因 $fail('参数格式校验错误');
             } else {
                 return $fail('参数格式校验错误');
@@ -1488,7 +1538,7 @@ class IndexController extends Controller
 
         $order = Order::with('order_products.product')->find($request->order_id);
 
-        foreach ($order->order_products as $order_products){
+        foreach ($order->order_products as $order_products) {
 
             Comment::create([
                 'order_id' => $request->order_id,

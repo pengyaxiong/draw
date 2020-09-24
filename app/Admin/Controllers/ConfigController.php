@@ -31,6 +31,8 @@ class ConfigController extends AdminController
             return implode('<br>',array_pluck($model,'description'));
         });
         $grid->column('coin', __('签到积分'));
+        $grid->column('get_coin', __('分享积分'))->help("用户只要点保存或分享就有积分，一天一次");
+        $grid->column('share_coin', __('邀请积分'))->help("新用户通过邀请者分享的小程序或二维码授权登录的，邀请者获得积分，且无上限");
         $grid->column('draw_coin', __('抽奖积分'));
         $grid->column('commission_rate', __('佣金比列'));
         $grid->column('goods_rate', __('商品反积分比列'));
@@ -71,6 +73,8 @@ class ConfigController extends AdminController
         $show->field('id', __('Id'));
         $show->field('rule', __('活动规则'));
         $show->field('coin', __('签到积分'));
+        $show->field('get_coin', __('分享积分'));
+        $show->field('share_coin', __('邀请积分'));
         $show->field('draw_coin', __('抽奖积分'));
         $show->field('commission_rate', __('佣金比列'));
         $show->field('goods_rate', __('商品反积分比列'));
@@ -94,6 +98,8 @@ class ConfigController extends AdminController
         });
 
         $form->number('coin', __('签到积分'));
+        $form->number('get_coin', __('分享积分'));
+        $form->number('share_coin', __('邀请积分'));
         $form->number('draw_coin', __('抽奖积分'));
 
         $form->text('commission_rate', __('佣金比列'));
