@@ -35,7 +35,8 @@ class ConfigController extends AdminController
         $grid->column('share_coin', __('邀请积分'))->help("新用户通过邀请者分享的小程序或二维码授权登录的，邀请者获得积分，且无上限");
         $grid->column('draw_coin', __('抽奖积分'));
         $grid->column('commission_rate', __('佣金比列'));
-        $grid->column('goods_rate', __('商品反积分比列'));
+        $grid->column('buy_coin', __('邀请购买返积分'))->help("奖励设置的积分给购买者的上级");
+        $grid->column('goods_rate', __('评论返积分比例'))->help("奖励商品价格*设置的积分比例的积分给购买者");
         $grid->column('coin_search', __('积分筛选区间'))->display(function ($model){
             return implode('<br>',array_pluck($model,'description'));
         });
@@ -77,7 +78,8 @@ class ConfigController extends AdminController
         $show->field('share_coin', __('邀请积分'));
         $show->field('draw_coin', __('抽奖积分'));
         $show->field('commission_rate', __('佣金比列'));
-        $show->field('goods_rate', __('商品反积分比列'));
+        $show->field('buy_coin', __('邀请购买返积分'));
+        $show->field('goods_rate', __('评论返积分比例'));
         $show->field('coin_search', __('积分筛选区间'));
         $show->field('withdraw_info', __('提现说明'));
 
@@ -103,7 +105,8 @@ class ConfigController extends AdminController
         $form->number('draw_coin', __('抽奖积分'));
 
         $form->text('commission_rate', __('佣金比列'));
-        $form->text('goods_rate', __('商品反积分比列'));
+        $form->text('buy_coin', __('邀请购买返积分'));
+        $form->text('goods_rate', __('评论返积分比例'));
 
         $form->table('coin_search', __('积分筛选区间'), function ($table) {
             $table->text('description', __('Description'))->help('以-连接');

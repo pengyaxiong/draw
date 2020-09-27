@@ -1517,6 +1517,17 @@ class IndexController extends Controller
                         ->withProperties(['type' => '-', 'num' => $order->total_price])
                         ->log('购买商品');
 
+                    $parent = Customer::find($customer->parent_id);
+                    if (!empty($parent)) {
+                        $num = Config::first()->buy_coin;
+                        $parent->money += $num;
+                        $parent->save();
+                        activity()->inLog('coin')
+                            ->performedOn($parent)
+                            ->causedBy($customer)
+                            ->withProperties(['type' => '+', 'num' => $num])
+                            ->log('下级' . $customer->nickname . '购买商品返积分');
+                    }
                 }
             } else {
                 return $fail('通信失败，请稍后再通知我');
